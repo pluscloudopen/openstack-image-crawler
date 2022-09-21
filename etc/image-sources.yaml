@@ -68,3 +68,15 @@ sources:
         extension: qcow2
         checksumname: SHA512SUMS
         algorithm: sha512
+
+  - name: AlmaLinux
+    vendor: "AlmaLinux OS"
+    releases:
+      - name: '9'
+        codename: 'none'
+        baseURL: https://repo.almalinux.org/almalinux/9/
+        releasepath: cloud/x86_64/images
+        imagename: AlmaLinux-9-GenericCloud-latest.x86_64
+        extension: qcow2
+        checksumname: CHECKSUM
+        algorithm: sha256
