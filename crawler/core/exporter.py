@@ -1,9 +1,18 @@
 from jinja2 import Template
+import os
 
 from crawler.core.database import read_release_from_catalog
 
 
 def export_image_catalog(connection, sources_catalog, local_repository):
+    # create directory (once) - only necessary when not created by git clone
+    if not os.path.exists(local_repository):
+        try:
+            print("Creating repository directory (%s)" % local_repository)
+            os.makedirs(local_repository)
+        except os.error as error:
+            raise SystemExit("FATAL: Creating directory %s failed with %s" % (local_repository, error))
+
     for source in sources_catalog['sources']:
         distribution = source['name']
         print("Exporting image catalog for " + distribution)
