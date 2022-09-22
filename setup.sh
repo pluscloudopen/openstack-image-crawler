@@ -3,7 +3,7 @@ set -e
 echo "OpenStack Image Crawler for lazy DevOps v0.1"
 echo
 echo "Installing required packages"
-sudo apt git install python3-pip python3-venv -y
+sudo apt install git python3-pip python3-venv -y
 echo "Creating venv under $HOME/.oic"
 python3 -m venv $HOME/.oic
 source $HOME/.oic/bin/activate
