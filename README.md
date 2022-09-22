@@ -26,16 +26,25 @@ optional arguments:
 
 ## Installation
 
-Tested on Ubuntu 20.04 LTS (should work with Python 3.8+)
+Tested on Ubuntu 20.04 LTS + 22.04 LTS (should work with Python 3.8+)
 
 ```
-git git@git.ps-intern.de:openstack/openstack-image-crawler.git
-sudo apt install python3-venv
+sudo apt git install python3-pip python3-venv
+git clone git@github.com:costelter/openstack-image-crawler.git
 cd openstack-image-crawler
 python3 -m venv .oic
 source .oic/bin/activate
-pip install wheel validators requests pyyaml bs4 jinja2
+pip install --upgrade pip wheel
+pip install -r requirements.txt
 ./image-crawler.py --init-db
+```
+
+or use the little setup.sh script
+
+```
+git clone git@github.com:costelter/openstack-image-crawler.git
+cd openstack-image-crawler
+./setup.sh
 ```
 
 ## Requirements
@@ -58,7 +67,6 @@ if not set, it will not handle the git repos part for you (untested).
 
 ToDo:
 
-- create requirements.txt
 - build container, docker-compose file
 - explain workflow
 - explain structure of config.yaml, image-sources.yaml
