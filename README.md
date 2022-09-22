@@ -29,7 +29,7 @@ optional arguments:
 Tested on Ubuntu 20.04 LTS + 22.04 LTS (should work with Python 3.8+)
 
 ```
-sudo apt git install python3-pip python3-venv
+sudo apt install git python3-pip python3-venv
 git clone git@github.com:costelter/openstack-image-crawler.git
 cd openstack-image-crawler
 python3 -m venv .oic
@@ -52,12 +52,11 @@ cd openstack-image-crawler
 Git Repositoy for the generated image yaml files. Access currently only via SSH (+key) supported.
 
 ```
-remote_repository: "git@git.gadgetlab.de:openstack/image-catalogs.git"
+remote_repository: "git@git.coolcompany.com:openstack/image-catalogs.git"
 ```
 (in etc/config.yaml)
 
-if not set, it will not handle the git repos part for you (untested).
-
+If there is no remote_repository entry in the config, the git actions are disabled. In the example config.yaml the entry is named no_remote_repository and therefore disabled. Just remove the "no_" and enter your repository URL. Keep in mind that you will have to enable repository access via ssh key and the right ssh key for the user calling the git command.
 
 ## Changes
 
