@@ -79,15 +79,21 @@ def main():
         print("\nSkipping repository crawling")
     else:
         print("\nStart repository crawling")
+        updated_sources = []
         for source in image_source_catalog['sources']:
             print("\nChecking updates for Distribution " + source['name'])
-            image_update_service(database, source)
+            updated_releases = image_update_service(database, source)
+            if updated_releases:
+                updated_sources.append(source['name'])
 
     if args.updates_only:
         print("\nSkipping catalog export")
     else:
-        print("\nExporting catalog to %s/%s" % (working_directory, config['local_repository']))
-        export_image_catalog(database, image_source_catalog, config['local_repository'])
+        if updated_sources:
+            print("\nExporting catalog to %s/%s" % (working_directory, config['local_repository']))
+            export_image_catalog(database, image_source_catalog, updated_sources, config['local_repository'])
+        else:
+            print("No Updates. No catalog files exported.")
 
     if 'remote_repository' in config:
         update_repository(config['local_repository'])

@@ -24,14 +24,11 @@ def release_update_check(release, last_checksum):
     current_checksum = release['algorithm'] + ":" + current_checksum
     # print(current_checksum)
     if current_checksum != last_checksum:
-        print("Found new checksum " + current_checksum)
         image_url = base_url + release['releasepath'] + "/" + imagename
         image_filedate = url_get_last_modified(image_url)
-        print(image_filedate)
 
         image_metadata = web_get_current_image_metadata(release, image_filedate)
         if image_metadata is not None:
-            # pprint(image_metadata)
 
             update = {}
             update['release_date'] = image_metadata['release_date']
@@ -46,10 +43,9 @@ def release_update_check(release, last_checksum):
 
 
 def image_update_service(connection, source):
+    updated_releases = []
     for release in source['releases']:
-        # print(release['name'])
         last_checksum = db_get_last_checksum(connection, source['name'], release['name'])
-        # print(last_checksum)
         catalog_update = release_update_check(release, last_checksum)
         if catalog_update:
             print("Update found for " + source['name'] + " " + release['name'])
@@ -59,9 +55,11 @@ def image_update_service(connection, source):
             catalog_update['distribution_name'] = source['name']
             catalog_update['distribution_release'] = release['name']
             catalog_update['release'] = release['name']
-            # pprint(catalog_update)
 
             # Fehler abfangen
             write_catalog_entry(connection, catalog_update)
+            updated_releases.append(release['name'])
         else:
             print("No update found for " + source['name'] + " " + release['name'])
+
+    return updated_releases

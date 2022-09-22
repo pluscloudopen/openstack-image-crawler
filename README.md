@@ -11,7 +11,7 @@ Usage:
 
 plusserver Image Crawler v0.1
 
-usage: oic.py [-h] [--config CONFIG] [--sources SOURCES] [--init-db] [--export-only] [--updates-only]
+usage: image-crawler.py [-h] [--config CONFIG] [--sources SOURCES] [--init-db] [--export-only] [--updates-only]
 
 checks cloud image repositories for new updates and keeps track of all images within its sqlite3 database
 
