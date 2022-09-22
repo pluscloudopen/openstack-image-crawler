@@ -54,8 +54,10 @@ def main():
         exit(0)
 
     # pprint(config)
-    if config['remote_repository']:
+    if 'remote_repository' in config:
         clone_or_pull(config['remote_repository'], config['local_repository'])
+    else:
+        print("No image catalog repository configured")
 
     if args.sources is not None:
         sources_filename = args.sources
@@ -87,7 +89,7 @@ def main():
         print("\nExporting catalog to %s/%s" % (working_directory, config['local_repository']))
         export_image_catalog(database, image_source_catalog, config['local_repository'])
 
-    if config['remote_repository']:
+    if 'remote_repository' in config:
         update_repository(config['local_repository'])
 
     database_disconnect(database)
