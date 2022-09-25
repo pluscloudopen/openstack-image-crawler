@@ -15,14 +15,14 @@ def release_update_check(release, last_checksum):
     # works for Ubuntu, Debian
     # imagename _with_ proper extension to look for in checksum lists
     imagename = release['imagename'] + "." + release['extension']
-    # print(imagename)
+
     current_checksum = web_get_checksum(checksum_url, imagename)
     if current_checksum is None:
         print("ERROR: no matching checksum found - check image (%s) and checksum filename (%s)" % (imagename, release['checksumname']))
         return None
 
     current_checksum = release['algorithm'] + ":" + current_checksum
-    # print(current_checksum)
+
     if current_checksum != last_checksum:
         image_url = base_url + release['releasepath'] + "/" + imagename
         image_filedate = url_get_last_modified(image_url)
@@ -56,7 +56,6 @@ def image_update_service(connection, source):
             catalog_update['distribution_release'] = release['name']
             catalog_update['release'] = release['name']
 
-            # Fehler abfangen
             write_catalog_entry(connection, catalog_update)
             updated_releases.append(release['name'])
         else:

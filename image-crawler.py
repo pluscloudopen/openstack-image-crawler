@@ -14,14 +14,11 @@ import os
 from crawler.core.config import config_read
 from crawler.core.database import database_connect, database_disconnect, database_initialize
 from crawler.core.exporter import export_image_catalog
-from crawler.updater.service import image_update_service
+from crawler.core.main import crawl_image_sources
 from crawler.git.base import clone_or_pull, update_repository
 
 
 def main():
-    # first_run ??
-    # create missing directories (exports)
-
     print("\nplusserver Image Crawler v0.1\n")
 
     working_directory = os.getcwd()
@@ -39,6 +36,7 @@ def main():
                         help='check only for updates, do not export catalog')
     args = parser.parse_args()
 
+    # read configuration
     if args.config is not None:
         config_filename = args.config
     else:
@@ -49,16 +47,7 @@ def main():
     if config is None:
         raise SystemExit("ERROR: Unable to open config " + config_filename)
 
-    if args.init_db:
-        database_initialize(config['database_name'])
-        exit(0)
-
-    # pprint(config)
-    if 'remote_repository' in config:
-        clone_or_pull(config['remote_repository'], config['local_repository'])
-    else:
-        print("No image catalog repository configured")
-
+    # read the image sources
     if args.sources is not None:
         sources_filename = args.sources
     else:
@@ -68,24 +57,31 @@ def main():
     if image_source_catalog is None:
         raise SystemExit("Unable to open image source catalog " + sources_filename)
 
-    # pprint(image_source_catalog)
+    # initialize database when run with --init-db
+    if args.init_db:
+        database_initialize(config['database_name'])
+        exit(0)
 
+    # clone or update local repository when git is enabled
+    if 'remote_repository' in config:
+        clone_or_pull(config['remote_repository'], config['local_repository'])
+    else:
+        print("No image catalog repository configured")
+
+    # connect to database
     database = database_connect(config['database_name'])
     if database is None:
         print("ERROR: Could not open database %s" % config['database_name'])
         exit(1)
 
+    # crawl image sources when requested
     if args.export_only:
         print("\nSkipping repository crawling")
     else:
         print("\nStart repository crawling")
-        updated_sources = []
-        for source in image_source_catalog['sources']:
-            print("\nChecking updates for Distribution " + source['name'])
-            updated_releases = image_update_service(database, source)
-            if updated_releases:
-                updated_sources.append(source['name'])
+        updated_sources = crawl_image_sources(image_source_catalog, database)
 
+    # export image catalog
     if args.updates_only:
         print("\nSkipping catalog export")
     else:
@@ -93,10 +89,13 @@ def main():
             print("\nExporting catalog to %s/%s" % (working_directory, config['local_repository']))
             export_image_catalog(database, image_source_catalog, updated_sources, config['local_repository'])
         else:
-            print("No Updates. No catalog files exported.")
+            print("No updates. No catalog files exported.")
 
-    if 'remote_repository' in config:
-        update_repository(config['local_repository'])
+    # push changes to git repository when configured
+    if 'remote_repository' in config and updated_sources:
+        update_repository(database, config['local_repository'], updated_sources)
+    else:
+        print("No remote repository update needed.")
 
     database_disconnect(database)
 

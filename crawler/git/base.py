@@ -1,7 +1,7 @@
 import git
-# from pprint import pprint
 from pathlib import Path
 
+from crawler.core.database import db_get_release_versions
 
 def clone_or_pull(remote_repository, repository):
     path = Path(repository)
@@ -20,7 +20,7 @@ def clone_or_pull(remote_repository, repository):
             raise SystemExit("FATAL: Update (pull) failed with %s" % error)
 
 
-def update_repository(repository):
+def update_repository(database, repository, updated_sources):
     image_repo = git.Repo(repository)
     if image_repo.is_dirty(untracked_files=True):
         print("\nChanges detected.\n")
@@ -41,8 +41,18 @@ def update_repository(repository):
                 print(file)
                 all_changes.append(file)
 
+        releases_list = []
+
+        for source in updated_sources:
+            for release in updated_sources[source]['releases']:
+                release_data = db_get_release_versions(database, source, release, 1)
+                releases_list.append(release_data['name'] + " " + release_data['version'])
+
+        commit_message = "Added the following releases: " + ", ".join(releases_list)
+        print(commit_message)
+
         image_repo.git.add(all_changes)
-        image_repo.index.commit('Updated.')
+        image_repo.index.commit(commit_message)
 
     try:
         image_repo.remotes.origin.push()

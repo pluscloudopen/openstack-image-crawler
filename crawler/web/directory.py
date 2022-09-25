@@ -27,9 +27,9 @@ def release_build_image_url(release, versionpath, version):
         base_url = release['baseURL']
 
     if "debian" in release['imagename']:
-        return base_url + versionpath + "/" + release['imagename'] + "-" + version + "." + release['extension']
+        return base_url + versionpath + release['imagename'] + "-" + version + "." + release['extension']
     elif "ubuntu" in release['imagename']:
-        return base_url + versionpath + "/" + release['imagename'] + "." + release['extension']
+        return base_url + versionpath + release['imagename'] + "." + release['extension']
     elif "AlmaLinux" in release['imagename']:
         return base_url + release['releasepath'] + "/" + versionpath
     # we do not know this distribution
@@ -97,8 +97,6 @@ def web_get_current_image_metadata(release, image_filedate):
                 release_date = image_filedate
 
             return({"url": release_build_image_url(release, release_version_path, new_version), "version": new_version, "release_date": release_date})
-        # else:
-        #     print("NOT FOUND in %s" % data)
 
     # release is behind file date
     filedate = datetime.date(int(version[0:4]), int(version[4:6]), int(version[6:8]))

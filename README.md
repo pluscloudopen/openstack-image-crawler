@@ -1,6 +1,37 @@
 # OpenStack Image Crawler
 
-OpenStack Image Crawler for checking image sources, gathering update information and generating image catalog files for the OpenStack Image Manager (or similiar tools)
+OpenStack Image Crawler for checking image sources, gathering update information and generating image catalog files for the [OpenStack Image Manager](https://github.com/osism/openstack-image-manager) (or similiar tools)
+
+## Requirements
+### Git repository for holding the image catalogs (optional)
+
+If you want to use the builtin git repository handling for storing the image catalog exports, you need to create a repository before start the image crawler the first time. Or you have to remove the "repository" directory and run it again.
+
+Currently only access via SSH (key) is supported. The image crawler will checkout the "main" (default) branch of your git repository.
+
+If there is no remote_repository entry in the config, the git actions are disabled. In the example config.yaml the entry is named no_remote_repository and therefore disabled. Just remove the "no_" and enter your repository URL. Keep in mind that you will have to enable repository access via ssh key and the right ssh key for the user calling the git command.
+## Installation
+
+Tested on Ubuntu 20.04 LTS + 22.04 LTS (should work with Python 3.8+ on other OSs, too)
+
+```
+sudo apt install git python3-pip python3-venv
+git clone git@github.com:costelter/openstack-image-crawler.git
+cd openstack-image-crawler
+python3 -m venv .oic
+source .oic/bin/activate
+pip install --upgrade pip wheel
+pip install -r requirements.txt
+./image-crawler.py --init-db
+```
+
+or use the little setup.sh script
+
+```
+git clone git@github.com:costelter/openstack-image-crawler.git
+cd openstack-image-crawler
+./setup.sh
+```
 
 ## Getting started
 
@@ -23,40 +54,6 @@ optional arguments:
   --export-only      export only existing image catalog
   --updates-only     check only for updates, do not export catalog
 ```
-
-## Installation
-
-Tested on Ubuntu 20.04 LTS + 22.04 LTS (should work with Python 3.8+)
-
-```
-sudo apt install git python3-pip python3-venv
-git clone git@github.com:costelter/openstack-image-crawler.git
-cd openstack-image-crawler
-python3 -m venv $HOME/.oic
-source $HOME/.oic/bin/activate
-pip install --upgrade pip wheel
-pip install -r requirements.txt
-./image-crawler.py --init-db
-```
-
-or use the little setup.sh script
-
-```
-git clone git@github.com:costelter/openstack-image-crawler.git
-cd openstack-image-crawler
-./setup.sh
-```
-
-## Requirements
-
-Git Repositoy for the generated image yaml files. Access currently only via SSH (+key) supported.
-
-```
-remote_repository: "git@git.coolcompany.com:openstack/image-catalogs.git"
-```
-(in etc/config.yaml)
-
-If there is no remote_repository entry in the config, the git actions are disabled. In the example config.yaml the entry is named no_remote_repository and therefore disabled. Just remove the "no_" and enter your repository URL. Keep in mind that you will have to enable repository access via ssh key and the right ssh key for the user calling the git command.
 
 ## Changes
 
