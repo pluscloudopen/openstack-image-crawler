@@ -128,3 +128,8 @@ dmypy.json
 .pyre/
 
 .DS_Store
+.oic/
+lib/image-catalog.db
+repository/
+test/
+.vscode/

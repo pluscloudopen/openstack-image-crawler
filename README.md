@@ -10,6 +10,7 @@ If you want to use the builtin git repository handling for storing the image cat
 Currently only access via SSH (key) is supported. The image crawler will checkout the "main" (default) branch of your git repository.
 
 If there is no remote_repository entry in the config, the git actions are disabled. In the example config.yaml the entry is named no_remote_repository and therefore disabled. Just remove the "no_" and enter your repository URL. Keep in mind that you will have to enable repository access via ssh key and the right ssh key for the user calling the git command.
+
 ## Installation
 
 Tested on Ubuntu 20.04 LTS + 22.04 LTS (should work with Python 3.8+ on other OSs, too)

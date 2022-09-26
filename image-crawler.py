@@ -9,6 +9,7 @@
 # 2022-09-19 v0.1 christian.stelter@plusserver.com
 
 import argparse
+import sys
 import os
 
 from crawler.core.config import config_read
@@ -45,7 +46,7 @@ def main():
 
     config = config_read(config_filename, "configuration")
     if config is None:
-        raise SystemExit("ERROR: Unable to open config " + config_filename)
+        raise SystemExit("\nERROR: Unable to open config " + config_filename)
 
     # read the image sources
     if args.sources is not None:
@@ -60,7 +61,7 @@ def main():
     # initialize database when run with --init-db
     if args.init_db:
         database_initialize(config['database_name'])
-        exit(0)
+        sys.exit(0)
 
     # clone or update local repository when git is enabled
     if 'remote_repository' in config:
@@ -71,8 +72,9 @@ def main():
     # connect to database
     database = database_connect(config['database_name'])
     if database is None:
-        print("ERROR: Could not open database %s" % config['database_name'])
-        exit(1)
+        print("\nERROR: Could not open database %s" % config['database_name'])
+        print("\nRun \"./image-crawler.py --init-db\" to create a new database OR config check your etc/config.yaml")
+        sys.exit(1)
 
     # crawl image sources when requested
     if args.export_only:

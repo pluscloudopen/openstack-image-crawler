@@ -1,3 +1,4 @@
+import sys
 import sqlite3
 from pathlib import Path
 
@@ -76,7 +77,7 @@ def db_get_release_versions(connection, distribution, release, limit):
         database_cursor.execute("SELECT name, release_date, version, distribution_name, distribution_release, url, checksum FROM image_catalog WHERE distribution_name = '%s' AND distribution_release = '%s' ORDER BY id DESC LIMIT %d" % (distribution, release, limit))
     except sqlite3.OperationalError as error:
         print("SQLite error: %s" % error)
-        exit(1)
+        sys.exit(1)
     row = database_cursor.fetchone()
 
     if row is not None:

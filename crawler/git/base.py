@@ -23,7 +23,7 @@ def clone_or_pull(remote_repository, repository):
 def update_repository(database, repository, updated_sources):
     image_repo = git.Repo(repository)
     if image_repo.is_dirty(untracked_files=True):
-        print("\nChanges detected.\n")
+        print("\nChanges in local repository detected.\n")
 
         all_changes = []
 
@@ -49,7 +49,7 @@ def update_repository(database, repository, updated_sources):
                 releases_list.append(release_data['name'] + " " + release_data['version'])
 
         commit_message = "Added the following releases: " + ", ".join(releases_list)
-        print(commit_message)
+        print("\n%s\n" % commit_message)
 
         image_repo.git.add(all_changes)
         image_repo.index.commit(commit_message)
