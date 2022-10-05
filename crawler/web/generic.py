@@ -3,6 +3,8 @@ import validators
 
 from email.utils import parsedate_to_datetime
 
+# from pprint import pprint
+
 
 def url_fetch_content(url):
     try:
@@ -48,6 +50,9 @@ def url_get_header(url):
         print("ERROR: unknown error: " + repr(err))
         return None
 
+    if request.status_code == 404:
+        return None
+
     return request
 
 
@@ -60,3 +65,12 @@ def url_get_last_modified(url):
     datestring = parsedate_to_datetime(last_modified_date).strftime("%Y-%m-%d")
 
     return datestring
+
+
+def url_exists(url):
+    request = url_get_header(url)
+
+    if request is None:
+        return False
+    else:
+        return True
