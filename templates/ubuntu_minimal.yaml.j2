@@ -22,12 +22,14 @@
       os_distro: ubuntu
       os_version: '{{ catalog['os_version'] }}'
     tags: []
+    latest_checksum_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['checksumname'] }}
+    latest_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['imagename'] }}.{{ metadata['extension'] }}
     versions:{% for release_version in catalog['versions'] %}
       - version: '{{ release_version }}'
         url: {{ catalog['versions'][release_version]['url'] }}
         checksum: {{ catalog['versions'][release_version]['checksum'] }}
-        meta:
-          image_build_date: {{ catalog['versions'][release_version]['release_date'] }}
-          image_source: {{ catalog['versions'][release_version]['url'] }}
-          image_description: {{ catalog['versions'][release_version]['url'] }}/unpacked/release_notes.txt
+        image_build_date: {{ catalog['versions'][release_version]['release_date'] }}
+        image_source: {{ catalog['versions'][release_version]['url'] }}
+        {% set base, filename = catalog['versions'][release_version]['url'].rsplit('/', 1) -%}
+        image_description: {{ base }}/unpacked/release_notes.txt
 {%- endfor %}

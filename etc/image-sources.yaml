@@ -72,6 +72,14 @@ sources:
   - name: AlmaLinux
     vendor: "AlmaLinux OS"
     releases:
+      - name: '8'
+        codename: 'none'
+        baseURL: https://repo.almalinux.org/almalinux/8/
+        releasepath: cloud/x86_64/images
+        imagename: AlmaLinux-8-GenericCloud-latest.x86_64
+        extension: qcow2
+        checksumname: CHECKSUM
+        algorithm: sha256
       - name: '9'
         codename: 'none'
         baseURL: https://repo.almalinux.org/almalinux/9/
