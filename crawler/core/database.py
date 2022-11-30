@@ -2,8 +2,6 @@ import sys
 import sqlite3
 from pathlib import Path
 
-from pprint import pprint
-
 def database_connect(name):
     path = Path(name)
     if path.is_file():
@@ -121,7 +119,6 @@ def read_release_from_catalog(connection, distribution, release):
     image_catalog['versions'] = {}
 
     for image in database_cursor.fetchall():
-        pprint(image[0])
         version = image[0]
         image_catalog['versions'][version] = {}
         image_catalog['versions'][version]['checksum'] = image[1]
