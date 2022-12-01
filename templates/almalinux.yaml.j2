@@ -28,7 +28,7 @@
       - version: '{{ release_version }}'
         url: {{ catalog['versions'][release_version]['url'] }}
         checksum: {{ catalog['versions'][release_version]['checksum'] }}
-        image_build_date: {{ catalog['versions'][release_version]['release_date'] }}
+        build_date: {{ catalog['versions'][release_version]['release_date'] }}
         image_source: {{ catalog['versions'][release_version]['url'] }}
         image_description: https://wiki.almalinux.org/release-notes/
 {%- endfor %}
