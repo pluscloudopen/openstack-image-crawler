@@ -2,7 +2,6 @@ import sys
 import sqlite3
 from pathlib import Path
 
-
 def database_connect(name):
     path = Path(name)
     if path.is_file():
@@ -112,7 +111,7 @@ def write_catalog_entry(connection, update):
 def read_release_from_catalog(connection, distribution, release):
     try:
         database_cursor = connection.cursor()
-        database_cursor.execute("SELECT version,checksum,url,release_date FROM (SELECT * FROM image_catalog WHERE distribution_name = '%s' AND distribution_release = '%s' ORDER BY id DESC LIMIT 2) ORDER BY ID" % (distribution, release))
+        database_cursor.execute("SELECT version,checksum,url,release_date FROM (SELECT * FROM image_catalog WHERE distribution_name = '%s' AND distribution_release = '%s' ORDER BY id DESC LIMIT 3) ORDER BY ID" % (distribution, release))
     except sqlite3.OperationalError as error:
         raise SystemError("SQLite error: %s" % error)
 

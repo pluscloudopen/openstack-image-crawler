@@ -22,12 +22,13 @@
       os_distro: almalinux
       os_version: '{{ catalog['os_version'] }}'
     tags: []
+    latest_checksum_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['checksumname'] }}
+    latest_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['imagename'] }}.{{ metadata['extension'] }}
     versions:{% for release_version in catalog['versions'] %}
       - version: '{{ release_version }}'
         url: {{ catalog['versions'][release_version]['url'] }}
         checksum: {{ catalog['versions'][release_version]['checksum'] }}
-        meta:
-          image_build_date: {{ catalog['versions'][release_version]['release_date'] }}
-          image_source: {{ catalog['versions'][release_version]['url'] }}
-          image_description: {{ catalog['versions'][release_version]['url'] }}/unpacked/release_notes.txt
+        build_date: {{ catalog['versions'][release_version]['release_date'] }}
+        image_source: {{ catalog['versions'][release_version]['url'] }}
+        image_description: https://wiki.almalinux.org/release-notes/
 {%- endfor %}

@@ -14,7 +14,7 @@ import os
 
 from crawler.core.config import config_read
 from crawler.core.database import database_connect, database_disconnect, database_initialize
-from crawler.core.exporter import export_image_catalog
+from crawler.core.exporter import export_image_catalog, export_image_catalog_all
 from crawler.core.main import crawl_image_sources
 from crawler.git.base import clone_or_pull, update_repository
 
@@ -79,6 +79,7 @@ def main():
     # crawl image sources when requested
     if args.export_only:
         print("\nSkipping repository crawling")
+        updated_sources = {}
     else:
         print("\nStart repository crawling")
         updated_sources = crawl_image_sources(image_source_catalog, database)
@@ -91,7 +92,9 @@ def main():
             print("\nExporting catalog to %s/%s" % (working_directory, config['local_repository']))
             export_image_catalog(database, image_source_catalog, updated_sources, config['local_repository'])
         else:
-            print("No updates. No catalog files exported.")
+            if args.export_only:
+                print("\nExporting all catalog files to %s/%s" % (working_directory, config['local_repository']))
+                export_image_catalog_all(database, image_source_catalog, config['local_repository'])
 
     # push changes to git repository when configured
     if 'remote_repository' in config and updated_sources:
