@@ -90,7 +90,7 @@ def get_version_path(release, version):
 def get_checksum_from_version_path(release, version_path):
     if "debian" in release['imagename']:
         url = release['baseURL'] + version_path + "/" + release['checksumname']
-        imagename_fq = release['imagename'] + "-" + version + "." + release['extension']
+        imagename_fq = release['imagename'] + "-" + version_path + "." + release['extension']
     elif "ubuntu" in release['imagename']:
         url = release['baseURL'] + version_path + "/" + release['checksumname']
         imagename_fq = release['imagename'] + "." + release['extension']
