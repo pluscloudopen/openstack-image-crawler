@@ -94,6 +94,26 @@ def db_get_release_versions(connection, distribution, release, limit):
     return last_entry
 
 
+def read_version_from_catalog(connection, distribution, release, version):
+    try:
+        database_cursor = connection.cursor()
+        database_cursor.execute("SELECT version,checksum,url,release_date FROM (SELECT * FROM image_catalog WHERE distribution_name = '%s' AND distribution_release = '%s' AND version ='%s' ORDER BY id DESC LIMIT 1) ORDER BY ID" % (distribution, release, version))
+    except sqlite3.OperationalError as error:
+        raise SystemError("SQLite error: %s" % error)
+
+    image_catalog = {}
+    image_catalog['versions'] = {}
+
+    for image in database_cursor.fetchall():
+        version = image[0]
+        image_catalog['versions'][version] = {}
+        image_catalog['versions'][version]['checksum'] = image[1]
+        image_catalog['versions'][version]['url'] = image[2]
+        image_catalog['versions'][version]['release_date'] = image[3]
+
+    return image_catalog
+
+
 def write_catalog_entry(connection, update):
     try:
         database_cursor = connection.cursor()
@@ -106,6 +126,29 @@ def write_catalog_entry(connection, update):
     database_cursor.close()
 
     return None
+
+
+def update_catalog_entry(connection, update):
+    try:
+        database_cursor = connection.cursor()
+        database_cursor.execute("UPDATE image_catalog set url=?, checksum=? WHERE name=? AND version=?", (update['url'], update['checksum'], update['name'], update['version']))
+        connection.commit()
+    except sqlite3.OperationalError as error:
+        raise SystemError("SQLite error: %s" % error)
+
+    database_cursor.close()
+
+    return None
+
+
+def write_or_update_catalog_entry(connection, update):
+    existing_entry = read_version_from_catalog(connection, update['distribution_name'], update['distribution_release'], update['version'])
+
+    if update['version'] in existing_entry['versions']:
+        print("Updating version " + update['version'])
+        return update_catalog_entry(connection, update)
+    else:
+        return write_catalog_entry(connection, update)
 
 
 def read_release_from_catalog(connection, distribution, release):

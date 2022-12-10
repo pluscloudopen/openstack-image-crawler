@@ -1,4 +1,4 @@
-from crawler.core.database import db_get_last_checksum, write_catalog_entry
+from crawler.core.database import db_get_last_checksum, write_or_update_catalog_entry
 from crawler.web.generic import url_get_last_modified
 from crawler.web.directory import web_get_checksum, web_get_current_image_metadata
 
@@ -56,7 +56,7 @@ def image_update_service(connection, source):
             catalog_update['distribution_release'] = release['name']
             catalog_update['release'] = release['name']
 
-            write_catalog_entry(connection, catalog_update)
+            write_or_update_catalog_entry(connection, catalog_update)
             updated_releases.append(release['name'])
         else:
             print("No update found for " + source['name'] + " " + release['name'])
