@@ -18,11 +18,11 @@ def export_image_catalog(connection, sources_catalog, updated_sources, local_rep
         if source['name'] in updated_sources:
             distribution = source['name']
             print("Exporting image catalog for " + distribution)
-            header_file = open("templates/header.yaml")
+            header_file = open("templates/header.yml")
             catalog_export = header_file.read()
             header_file.close()
 
-            image_template_filename = "templates/" + distribution.lower().replace(" ", "_") + ".yaml.j2"
+            image_template_filename = "templates/" + distribution.lower().replace(" ", "_") + ".yml.j2"
             image_template_file = open(image_template_filename, "r")
             image_template = Template(image_template_file.read())
             image_template_file.close()
@@ -36,7 +36,7 @@ def export_image_catalog(connection, sources_catalog, updated_sources, local_rep
 
                 catalog_export = catalog_export + image_template.render(catalog=release_catalog, metadata=release) + "\n"
 
-            image_catalog_export_filename = local_repository + "/" + distribution.lower().replace(" ", "_") + ".yaml"
+            image_catalog_export_filename = local_repository + "/" + distribution.lower().replace(" ", "_") + ".yml"
             # TODO error handling
             image_catalog_export_file = open(image_catalog_export_filename, "w")
             image_catalog_export_file.write(catalog_export)
@@ -56,11 +56,11 @@ def export_image_catalog_all(connection, sources_catalog, local_repository):
     for source in sources_catalog['sources']:
         distribution = source['name']
         print("Exporting image catalog for " + distribution)
-        header_file = open("templates/header.yaml")
+        header_file = open("templates/header.yml")
         catalog_export = header_file.read()
         header_file.close()
 
-        image_template_filename = "templates/" + distribution.lower().replace(" ", "_") + ".yaml.j2"
+        image_template_filename = "templates/" + distribution.lower().replace(" ", "_") + ".yml.j2"
         image_template_file = open(image_template_filename, "r")
         image_template = Template(image_template_file.read())
         image_template_file.close()
@@ -74,7 +74,7 @@ def export_image_catalog_all(connection, sources_catalog, local_repository):
 
             catalog_export = catalog_export + image_template.render(catalog=release_catalog, metadata=release) + "\n"
 
-        image_catalog_export_filename = local_repository + "/" + distribution.lower().replace(" ", "_") + ".yaml"
+        image_catalog_export_filename = local_repository + "/" + distribution.lower().replace(" ", "_") + ".yml"
         # TODO error handling
         image_catalog_export_file = open(image_catalog_export_filename, "w")
         image_catalog_export_file.write(catalog_export)
