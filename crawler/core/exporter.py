@@ -71,6 +71,7 @@ def export_image_catalog_all(connection, sources_catalog, local_repository):
             release_catalog['name'] = distribution
             release_catalog['os_distro'] = distribution.lower()
             release_catalog['os_version'] = release['name']
+            release_catalog['codename'] = release['codename']
 
             catalog_export = catalog_export + image_template.render(catalog=release_catalog, metadata=release) + "\n"
 

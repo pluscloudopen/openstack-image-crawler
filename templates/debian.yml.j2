@@ -31,5 +31,5 @@
         checksum: {{ catalog['versions'][release_version]['checksum'] }}
         build_date: {{ catalog['versions'][release_version]['release_date'] }}
         image_source: {{ catalog['versions'][release_version]['url'] }}
-        image_description: https://www.debian.org/releases/{{ codename }}/amd64/release-notes/
+        image_description: https://www.debian.org/releases/{{ catalog['codename'] }}/amd64/release-notes/
 {%- endfor %}
