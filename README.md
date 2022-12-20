@@ -1,3 +1,7 @@
+# DEPRECATION WARNING
+
+The openstack-image-crawler will become part of the [OpenStack Image Manager](https://github.com/osism/openstack-image-manager).
+
 # OpenStack Image Crawler
 
 OpenStack Image Crawler for checking image sources, gathering update information and generating image catalog files for the [OpenStack Image Manager](https://github.com/osism/openstack-image-manager) (or similiar tools)
