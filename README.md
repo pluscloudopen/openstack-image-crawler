@@ -63,27 +63,3 @@ crawls the complete cloud web directories (for Ubuntu and Debian only) and gathe
 WARNING! historian.py is meant to be run on an empty image-catalog.db only. Run ./image-crawler.py --init-db then ./historian.py.
 
 As time permits the mechanismus relying on last entry = last version (and therefore last checksum) will be improved. This will be someday integrated into the image-crawler as soon as it is smarter. Planned features: specifying a time range or number of historic releases.
-
-## Changes
-
-### 2023-05-24
-
-- added version tag
-- docker example added for use in a pipeline
-- improved git handling
-- added more documentation
-- moved from openstack-image-manager back to its own repo
-
-### 2023-01-09
-
-- added more documentation on usage and functionality
-
-### 2023-01-05
-
-- added ssh_git_command for git (costelter)
-- added branch support (costelter)
-- fixed output of export path informational (costelter)
-
-### 2023-01-02
-
-- fixed static path for templates (costelter)
