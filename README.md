@@ -66,6 +66,14 @@ As time permits the mechanismus relying on last entry = last version (and theref
 
 ## Changes
 
+### 2023-05-24
+
+- added version tag
+- docker example added for use in a pipeline
+- improved git handling
+- added more documentation
+- moved from openstack-image-manager back to its own repo
+
 ### 2023-01-09
 
 - added more documentation on usage and functionality
