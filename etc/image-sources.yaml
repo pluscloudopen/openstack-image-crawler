@@ -4,14 +4,6 @@ sources:
   - name: Ubuntu
     vendor: "Canonical Ltd."
     releases:
-      - name: '18.04'
-        codename: bionic
-        baseURL: https://cloud-images.ubuntu.com/releases/bionic/
-        releasepath: release
-        imagename: ubuntu-18.04-server-cloudimg-amd64
-        extension: img
-        checksumname: SHA256SUMS
-        algorithm: sha256
       - name: '20.04'
         codename: focal
         baseURL: https://cloud-images.ubuntu.com/releases/focal/
@@ -80,6 +72,7 @@ sources:
         extension: qcow2
         checksumname: CHECKSUM
         algorithm: sha256
+        limit: 1
       - name: '9'
         codename: 'none'
         baseURL: https://repo.almalinux.org/almalinux/9/
@@ -88,3 +81,4 @@ sources:
         extension: qcow2
         checksumname: CHECKSUM
         algorithm: sha256
+        limit: 1
