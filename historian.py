@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+import os
 from crawler.web.generic import url_exists
 from crawler.web.directory import web_get_checksum
 from crawler.core.database import (

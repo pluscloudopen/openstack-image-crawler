@@ -148,7 +148,7 @@ def web_get_current_image_metadata(release, image_filedate):
                 release_version_path = data
                 if release_version_path.endswith("/"):
                     release_version_path = release_version_path.rstrip("/")
-                ## DEBUG when do we need this?
+                # DEBUG when do we need this?
                 new_version = release_get_version_from_path(
                     release, release_version_path
                 )
