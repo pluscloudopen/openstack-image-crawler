@@ -35,6 +35,10 @@ def export_image_catalog(
             image_template_file.close()
 
             for release in source["releases"]:
+                #normalize base url again
+                if not release["baseURL"].endswith("/"):
+                    release["baseURL"] = release["baseURL"] + "/"
+
                 # TODO check empty catalog (still necessary after add updated sources?)
                 release_catalog = read_release_from_catalog(
                     connection, distribution, release["name"]
