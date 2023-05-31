@@ -95,7 +95,7 @@ def web_get_current_image_metadata(release, image_filedate):
     version = image_filedate.replace("-", "")
 
     # get directory content
-    if "debian" in release["imagename"] or "ubuntu" in release["imagename"] or "flatcar" in release["imagename"]:
+    if "debian" in release["imagename"] or "ubuntu" in release["imagename"]:
         requestURL = release["baseURL"]
     else:
         requestURL = release["baseURL"] + "/" + release["releasepath"]
