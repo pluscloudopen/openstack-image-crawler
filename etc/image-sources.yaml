@@ -80,6 +80,7 @@ sources:
         extension: qcow2
         checksumname: CHECKSUM
         algorithm: sha256
+        limit: 1
       - name: '9'
         codename: 'none'
         baseURL: https://repo.almalinux.org/almalinux/9/
@@ -88,7 +89,7 @@ sources:
         extension: qcow2
         checksumname: CHECKSUM
         algorithm: sha256
-
+        limit: 1
 
   - name: Flatcar
     vendor: "Flatcar"
