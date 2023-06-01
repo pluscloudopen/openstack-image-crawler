@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 2023-06-01
+- updated example Dockerfile to new repos
+
 ## 2023-05-30
 
 - fix Alma Linux URL generation which suffered from the last Ubuntu fix

@@ -6,7 +6,7 @@
 # whenever a new image is detected all relevant information needed for
 # maintaining an image catalog
 #
-# 2023-03-19 v0.2 christian.stelter@plusserver.com
+# 2023-05-31 v0.3.1 christian.stelter@plusserver.com
 
 import argparse
 import sys
@@ -24,7 +24,7 @@ from crawler.git.base import clone_or_pull, update_repository
 
 
 def main():
-    print("\nplusserver Image Crawler v0.2\n")
+    print("\nplusserver Image Crawler v0.3.1\n")
 
     working_directory = os.getcwd()
     program_directory = os.path.dirname(os.path.abspath(__file__))

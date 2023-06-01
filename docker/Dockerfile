@@ -1,6 +1,6 @@
 # openstack image crawler sample
 #
-# 2023-03-19 christian.stelter@plusserver.com
+# 2023-06-01 christian.stelter@plusserver.com
 
 FROM python:3.10-slim-bullseye
 
@@ -16,9 +16,9 @@ RUN useradd -u ${HOST_UID} -s /bin/bash -c "crawler" -d "/opt/crawler" -m crawle
     libcap2-bin jq lsb-release software-properties-common curl dumb-init build-essential \
     python3-dev python3-pip python3-venv
 
-RUN git clone --depth 1 https://github.com/osism/openstack-image-manager.git /tmp/openstack-image-manager && \
-    mv /tmp/openstack-image-manager/crawler/* /opt/crawler && \
-    rm -rf /tmp/openstack-image-manager && \
+RUN git clone --depth 1 -b alma_slash_fix https://github.com/pluscloudopen/openstack-image-crawler.git /tmp/crawler && \
+    mv /tmp/crawler/* /opt/crawler/ && \
+    rm -rf /tmp/crawler && \
     cd /opt/crawler && \
     python3 -m venv .oic && \
     . .oic/bin/activate && \
