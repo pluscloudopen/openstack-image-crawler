@@ -45,6 +45,8 @@ def release_build_image_url(release, versionpath, version):
         )
     elif "AlmaLinux" in release["imagename"]:
         return base_url + release["releasepath"] + "/" + versionpath
+    elif "flatcar" in release["imagename"]:
+        return base_url + release["releasepath"] + "/" + release["imagename"] + "." + release["extension"]
     # we do not know this distribution
     else:
         return None
@@ -96,7 +98,7 @@ def web_get_current_image_metadata(release, image_filedate):
     if "debian" in release["imagename"] or "ubuntu" in release["imagename"]:
         requestURL = release["baseURL"]
     else:
-        requestURL = release["baseURL"] + release["releasepath"]
+        requestURL = release["baseURL"] + "/" + release["releasepath"]
 
     request = requests.get(requestURL, allow_redirects=True)
     soup = BeautifulSoup(request.text, "html.parser")

@@ -28,7 +28,17 @@ def release_update_check(release, last_checksum):
 
     if current_checksum != last_checksum:
         image_url = base_url + release["releasepath"] + "/" + imagename
+
         image_filedate = url_get_last_modified(image_url)
+
+        if "immutable" in release and release["immutable"]:
+            update = {}
+            update["release_date"] = image_filedate
+            update["url"] = image_url
+            update["version"] = release['name']
+            update["checksum"] = current_checksum
+
+            return update
 
         image_metadata = web_get_current_image_metadata(release, image_filedate)
         if image_metadata is not None:

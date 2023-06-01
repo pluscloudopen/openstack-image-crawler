@@ -82,3 +82,16 @@ sources:
         checksumname: CHECKSUM
         algorithm: sha256
         limit: 1
+
+  - name: Flatcar
+    vendor: "Flatcar"
+    releases:
+      - name: 3510.2.1
+        codename: 3510.2.1
+        baseURL: https://stable.release.flatcar-linux.net/amd64-usr
+        releasepath: 3510.2.1
+        imagename: flatcar_production_openstack_image
+        extension: img.gz
+        checksumname: flatcar_production_openstack_image.img.gz.DIGESTS
+        algorithm: md5
+        immutable: true
