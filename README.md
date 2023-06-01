@@ -36,6 +36,8 @@ cd openstack-image-crawler
 
 ## Getting started
 
+### Image Crawler
+
 Usage:
 
 ```
@@ -56,10 +58,17 @@ optional arguments:
   --updates-only     check only for updates, do not export catalog
 ```
 
-NEW: historian.py
+### Helper: Historian
+
+./historian.py
 
 Crawls the complete cloud web directories (for Ubuntu and Debian only) and gathers their metadata. Some old versions have not all necessary metadata and will be skipped.
 
-WARNING! historian.py is meant to be run on an empty image-catalog.db only. Run ./image-crawler.py --init-db then ./historian.py.
+**WARNING!** historian.py is meant to be run on an empty image-catalog.db only. Create an empty database with image-crawler first.
+
+```
+./image-crawler.py --init-db
+./historian.py
+```
 
 As time permits the mechanismus relying on last entry = last version (and therefore last checksum) will be improved. This will be someday integrated into the image-crawler as soon as it is smarter. Planned features: specifying a time range or number of historic releases.

@@ -192,7 +192,7 @@ def write_or_update_catalog_entry(connection, update):
         return write_catalog_entry(connection, update)
 
 
-def read_release_from_catalog(connection, distribution, release):
+def read_release_from_catalog(connection, distribution, release, limit):
     try:
         database_cursor = connection.cursor()
         database_cursor.execute(
@@ -200,8 +200,8 @@ def read_release_from_catalog(connection, distribution, release):
             "FROM (SELECT * FROM image_catalog "
             "WHERE distribution_name = '%s' "
             "AND distribution_release = '%s' "
-            "ORDER BY id DESC LIMIT 3) "
-            "ORDER BY ID" % (distribution, release)
+            "ORDER BY id DESC LIMIT %d) "
+            "ORDER BY ID" % (distribution, release, limit)
         )
     except sqlite3.OperationalError as error:
         raise SystemError("SQLite error: %s" % error)
