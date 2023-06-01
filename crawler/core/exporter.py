@@ -40,8 +40,12 @@ def export_image_catalog(
                     release["baseURL"] = release["baseURL"] + "/"
 
                 # TODO check empty catalog (still necessary after add updated sources?)
+                if "limit" in release:
+                    limit = release["limit"]
+                else:
+                    limit = 3
                 release_catalog = read_release_from_catalog(
-                    connection, distribution, release["name"]
+                    connection, distribution, release["name"], limit
                 )
                 release_catalog["name"] = distribution
                 release_catalog["os_distro"] = distribution.lower()
@@ -94,8 +98,12 @@ def export_image_catalog_all(
 
         for release in source["releases"]:
             # TODO check empty catalog (still necessary after add updated sources?)
+            if "limit" in release:
+                limit = release["limit"]
+            else:
+                limit = 3
             release_catalog = read_release_from_catalog(
-                connection, distribution, release["name"]
+                connection, distribution, release["name"], limit
             )
             release_catalog["name"] = distribution
             release_catalog["os_distro"] = distribution.lower()

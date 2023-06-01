@@ -1,5 +1,15 @@
 # Changelog
 
+
+## 2023-06-01
+- updated example Dockerfile to new repos
+
+## 2023-05-30
+
+- fix Alma Linux URL generation which suffered from the last Ubuntu fix
+- added the ability to limit the number of versions per release (default 3 - if not set via "limit: X")
+- removed Ubuntu 18.04 LTS due to reaching EOL in sample image-sources.yaml
+
 ## 2023-05-24
 
 - added version tag

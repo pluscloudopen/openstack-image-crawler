@@ -26,7 +26,7 @@ def release_build_image_url(release, versionpath, version):
     else:
         base_url = release["baseURL"]
 
-    if not versionpath.endswith("/"):
+    if not "AlmaLinux" in release["imagename"] and not versionpath.endswith("/"):
         versionpath = versionpath + "/"
 
     if "debian" in release["imagename"]:
