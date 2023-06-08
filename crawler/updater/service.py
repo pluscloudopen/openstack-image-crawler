@@ -2,6 +2,8 @@ from crawler.core.database import db_get_last_checksum, write_or_update_catalog_
 from crawler.web.generic import url_get_last_modified
 from crawler.web.directory import web_get_checksum, web_get_current_image_metadata
 
+from crawler.updater.ubuntu import ubuntu_update_check
+
 
 def release_update_check(release, last_checksum):
     # works for Ubuntu, Debian
@@ -61,7 +63,13 @@ def image_update_service(connection, source):
         last_checksum = db_get_last_checksum(
             connection, source["name"], release["name"]
         )
-        catalog_update = release_update_check(release, last_checksum)
+
+        print("image_update_service/last_checksum:" + last_checksum)
+
+        if "ubuntu" in release["imagename"]:
+            catalog_update = ubuntu_update_check(release, last_checksum)
+        else:
+            catalog_update = release_update_check(release, last_checksum)
         if catalog_update:
             print("Update found for " + source["name"] + " " + release["name"])
             print("New release " + catalog_update["version"])
