@@ -3,6 +3,8 @@ from crawler.web.generic import url_get_last_modified
 from crawler.web.directory import web_get_checksum, web_get_current_image_metadata
 
 from crawler.updater.ubuntu import ubuntu_update_check
+from crawler.updater.debian import debian_update_check
+from crawler.updater.alma import alma_update_check
 
 
 def release_update_check(release, last_checksum):
@@ -68,6 +70,10 @@ def image_update_service(connection, source):
 
         if "ubuntu" in release["imagename"]:
             catalog_update = ubuntu_update_check(release, last_checksum)
+        elif "debian" in release["imagename"]:
+            catalog_update = debian_update_check(release, last_checksum)
+        elif "alma" in release["imagename"]:
+            catalog_update = alma_update_check(release, last_checksum)
         else:
             catalog_update = release_update_check(release, last_checksum)
         if catalog_update:
