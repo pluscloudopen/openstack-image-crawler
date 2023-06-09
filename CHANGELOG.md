@@ -1,5 +1,8 @@
 # Changelog
 
+## 2023-06-XX
+- refactoring of updater parts - split into single files for each distribution
+- added support Flatcar Container Linux
 
 ## 2023-06-01
 - updated example Dockerfile to new repos
