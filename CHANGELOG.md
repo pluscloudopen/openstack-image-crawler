@@ -2,7 +2,9 @@
 
 ## 2023-06-XX
 - refactoring of updater parts - split into single files for each distribution
+- removed generic release_update_check from updater/service.py
 - added support Flatcar Container Linux
+- updated README.md
 
 ## 2023-06-01
 - updated example Dockerfile to new repos

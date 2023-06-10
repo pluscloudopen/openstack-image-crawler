@@ -1,5 +1,7 @@
 import sys
 import sqlite3
+
+from loguru import logger
 from pathlib import Path
 
 
@@ -9,7 +11,7 @@ def database_connect(name):
         try:
             connection = sqlite3.connect(name)
         except sqlite3.OperationalError as error:
-            print("ERROR: %s" % error)
+            logger.error(error)
             return None
         return connection
     else:
@@ -23,7 +25,7 @@ def database_disconnect(connection):
 def database_initialize(name, prog_dirname):
     path = Path(name)
     if path.is_file():
-        print("WARNING: database %s already exists. Cowardly refusing action." % name)
+        logger.warning("database %s already exists. Cowardly refusing action." % name)
     else:
         create_statement_fqfn = prog_dirname + "/lib/initialize-image-catalog.sql"
         create_statement_file_path = Path(create_statement_fqfn)
@@ -32,20 +34,21 @@ def database_initialize(name, prog_dirname):
             create_statement = db_init_file.read()
             db_init_file.close()
         else:
-            raise SystemError("Template initialize-image-catalog.sql not found")
+            logger.error("Template initialize-image-catalog.sql not found")
+            raise SystemExit(1)
 
         try:
             connection = sqlite3.connect(name)
         except sqlite3.OperationalError as error:
-            print("ERROR: %s" % error)
+            logger.error(error)
         database_cursor = connection.cursor()
         try:
             database_cursor.execute(create_statement)
         except Exception as error:
-            print('ERROR: create table failed with the following error "%s"' % error)
+            logger.error('create table failed with the following error "%s"' % error)
 
         connection.close()
-        print("New database created under %s" % name)
+        logger.info("New database created under %s" % name)
 
 
 def db_get_last_checksum(connection, distribution, release):
@@ -58,12 +61,13 @@ def db_get_last_checksum(connection, distribution, release):
             "ORDER BY id DESC LIMIT 1" % (distribution, release)
         )
     except sqlite3.OperationalError as error:
-        raise SystemError("SQLite error: %s" % error)
+        logger.error(error)
+        raise SystemExit(1)
 
     row = database_cursor.fetchone()
 
     if row is None:
-        # print("no previous entries found")
+        logger.debug("no previous entries found")
         last_checksum = "sha256:none"
     else:
         last_checksum = row[0]
@@ -87,7 +91,7 @@ def db_get_release_versions(connection, distribution, release, limit):
             "ORDER BY id DESC LIMIT %d" % (distribution, release, limit)
         )
     except sqlite3.OperationalError as error:
-        print("SQLite error: %s" % error)
+        logger.error(error)
         sys.exit(1)
     row = database_cursor.fetchone()
 
@@ -119,7 +123,8 @@ def read_version_from_catalog(connection, distribution, release, version):
             "ORDER BY ID" % (distribution, release, version)
         )
     except sqlite3.OperationalError as error:
-        raise SystemError("SQLite error: %s" % error)
+        logger.error(error)
+        raise SystemExit(1)
 
     image_catalog = {}
     image_catalog["versions"] = {}
@@ -154,7 +159,8 @@ def write_catalog_entry(connection, update):
         )
         connection.commit()
     except sqlite3.OperationalError as error:
-        raise SystemError("SQLite error: %s" % error)
+        logger.error(error)
+        raise SystemExit(1)
 
     database_cursor.close()
 
@@ -170,7 +176,8 @@ def update_catalog_entry(connection, update):
         )
         connection.commit()
     except sqlite3.OperationalError as error:
-        raise SystemError("SQLite error: %s" % error)
+        logger.error(error)
+        raise SystemExit(1)
 
     database_cursor.close()
 
@@ -186,7 +193,7 @@ def write_or_update_catalog_entry(connection, update):
     )
 
     if update["version"] in existing_entry["versions"]:
-        print("Updating version " + update["version"])
+        logger.info("Updating version " + update["version"])
         return update_catalog_entry(connection, update)
     else:
         return write_catalog_entry(connection, update)
@@ -204,7 +211,8 @@ def read_release_from_catalog(connection, distribution, release, limit):
             "ORDER BY ID" % (distribution, release, limit)
         )
     except sqlite3.OperationalError as error:
-        raise SystemError("SQLite error: %s" % error)
+        logger.error(error)
+        raise SystemExit(1)
 
     image_catalog = {}
     image_catalog["versions"] = {}

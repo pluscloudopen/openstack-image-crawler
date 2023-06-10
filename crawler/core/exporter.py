@@ -2,7 +2,7 @@ from jinja2 import Template
 import os
 
 from crawler.core.database import read_release_from_catalog
-
+from loguru import logger
 
 def export_image_catalog(
     connection, sources_catalog, updated_sources, local_repository, template_path
@@ -11,18 +11,19 @@ def export_image_catalog(
     # create directory (once) - only necessary when not created by git clone
     if not os.path.exists(local_repository):
         try:
-            print("Creating repository directory (%s)" % local_repository)
+            logger.info("Creating repository directory (%s)" % local_repository)
             os.makedirs(local_repository)
         except os.error as error:
-            raise SystemExit(
-                "FATAL: Creating directory %s failed with %s"
+            logger.error(
+                "Creating directory %s failed with %s"
                 % (local_repository, error)
             )
+            raise SystemExit(1)
 
     for source in sources_catalog["sources"]:
         if source["name"] in updated_sources:
             distribution = source["name"]
-            print("Exporting image catalog for " + distribution)
+            logger.info("Exporting image catalog for " + distribution)
             header_file = open(template_path + "/header.yml")
             catalog_export = header_file.read()
             header_file.close()
@@ -74,17 +75,18 @@ def export_image_catalog_all(
     # create directory (once) - only necessary when not created by git clone
     if not os.path.exists(local_repository):
         try:
-            print("Creating repository directory (%s)" % local_repository)
+            logger.info("Creating repository directory (%s)" % local_repository)
             os.makedirs(local_repository)
         except os.error as error:
-            raise SystemExit(
-                "FATAL: Creating directory %s failed with %s"
+            logger.error(
+                "Creating directory %s failed with %s"
                 % (local_repository, error)
             )
+            raise SystemExit(1)
 
     for source in sources_catalog["sources"]:
         distribution = source["name"]
-        print("Exporting image catalog for " + distribution)
+        logger.info("Exporting image catalog for " + distribution)
         header_file = open(template_path + "/header.yml")
         catalog_export = header_file.read()
         header_file.close()

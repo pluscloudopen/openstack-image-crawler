@@ -9,7 +9,8 @@ from crawler.web.generic import url_get_last_modified
 from crawler.web.directory import web_get_checksum
 
 from bs4 import BeautifulSoup
-from pprint import pprint
+from loguru import logger
+
 
 def build_image_url(release, versionpath):
     if not release["baseURL"].endswith("/"):
@@ -40,17 +41,15 @@ def get_metadata(release, image_filedate):
         data = link.get("href")
 
         if version_pattern.search(data):
-            # print("flatcat.py/get_metadata data matched: " + data)
             last_link = data
 
     # last_link contains "./3510.2.2/" relative link address with dot and slashes
     extract = version_pattern.search(last_link)
-    pprint(extract)
     version = extract.group(0)
 
-    # print("last version: " + version)
-
-    # print("image_url:" + build_image_url(release, version))
+    logger.debug("url: " + build_image_url(release, version))
+    logger.debug("last version: " + version)
+    logger.debug("release_date: " + filedate)
 
     return {
         "url": build_image_url(release, version),
@@ -68,22 +67,22 @@ def flatcar_update_check(release, last_checksum):
 
     checksum_url = base_url + release["releasepath"] + "/" + release["checksumname"]
 
-    print("flatcar_update_check/checksum_url:" + checksum_url)
+    logger.debug("checksum_url: " + checksum_url)
 
     # as specified in image-sources.yaml
     # imagename: flatcar-22.04-server-cloudimg-amd64
     # extension: img
     imagename = release["imagename"] + "." + release["extension"]
 
-    print("flatcar_update_check/imagename:" + imagename)
+    logger.debug("imagename: " + imagename)
 
     current_checksum = web_get_checksum(checksum_url, imagename)
 
-    print("flatcar_update_check/current_checksum:" + current_checksum)
+    logger.debug("current_checksum: " + current_checksum)
 
     if current_checksum is None:
-        print(
-            "ERROR: no matching checksum found - check image (%s) "
+        logger.error(
+            "no matching checksum found - check image (%s) "
             "and checksum filename (%s)" % (imagename, release["checksumname"])
         )
         return None
@@ -93,18 +92,18 @@ def flatcar_update_check(release, last_checksum):
     current_checksum = release["algorithm"] + ":" + current_checksum
 
     if current_checksum != last_checksum:
-        print("DO something")
+        logger.debug("current_checksum " + current_checksum + " differs from last_checksum " + last_checksum)
         image_url = base_url + release["releasepath"] + "/" + imagename
 
-        print("flatcar_update_check/image_url:" + image_url)
+        logger.debug("image_url: " + image_url)
 
         image_filedate = url_get_last_modified(image_url)
 
-        print("flatcar_update_check/image_filedate:" + image_filedate)
+        logger.debug("image_filedate: " + image_filedate)
 
         image_metadata = get_metadata(release, image_filedate)
         if image_metadata is not None:
-            pprint(image_metadata)
+            logger.debug("got metadata")
             update = {}
             update["release_date"] = image_metadata["release_date"]
             update["url"] = image_metadata["url"]
@@ -112,6 +111,7 @@ def flatcar_update_check(release, last_checksum):
             update["checksum"] = current_checksum
             return update
         else:
+            logger.warn("got no metadata")
             return None
 
     return None

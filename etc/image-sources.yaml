@@ -1,14 +1,14 @@
 ---
 sources:
 
-  - name: Uxuntu
+  - name: Ubuntu
     vendor: "Canonical Ltd."
     releases:
       - name: '20.04'
         codename: focal
         baseURL: https://cloud-images.ubuntu.com/releases/focal/
         releasepath: release
-        imagename: uxuntu-20.04-server-cloudimg-amd64
+        imagename: ubuntu-20.04-server-cloudimg-amd64
         extension: img
         checksumname: SHA256SUMS
         algorithm: sha256
@@ -16,7 +16,7 @@ sources:
         codename: jammy
         baseURL: https://cloud-images.ubuntu.com/releases/jammy/
         releasepath: release
-        imagename: uxuntu-22.04-server-cloudimg-amd64
+        imagename: ubuntu-22.04-server-cloudimg-amd64
         extension: img
         checksumname: SHA256SUMS
         algorithm: sha256
