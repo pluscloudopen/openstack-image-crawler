@@ -5,6 +5,8 @@
 - removed generic release_update_check from updater/service.py
 - added support Flatcar Container Linux
 - updated README.md
+- added loguru for easy configuration of logging
+- added optional debug output (via loglevel)
 
 ## 2023-06-01
 - updated example Dockerfile to new repos
