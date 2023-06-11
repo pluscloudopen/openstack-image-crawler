@@ -22,8 +22,8 @@
       os_distro: rocky
       os_version: '{{ catalog['os_version'] }}'
     tags: []
-    latest_checksum_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['checksumname'] }}
-    latest_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['imagename'] }}.{{ metadata['extension'] }}
+    latest_checksum_url: {{ metadata['baseURL'] }}{{ catalog['os_version'] }}/{{ metadata['imagepath'] }}/{{ metadata['checksumname'] }}
+    latest_url: {{ metadata['baseURL'] }}{{ catalog['os_version'] }}/{{ metadata['imagepath'] }}/{{ metadata['imagename'] }}.{{ metadata['extension'] }}
     versions:{% for release_version in catalog['versions'] %}
       - version: '{{ release_version }}'
         url: {{ catalog['versions'][release_version]['url'] }}
