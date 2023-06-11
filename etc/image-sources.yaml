@@ -60,6 +60,14 @@ sources:
         extension: qcow2
         checksumname: SHA512SUMS
         algorithm: sha512
+      - name: '12'
+        codename: bookworm
+        baseURL: https://cloud.debian.org/images/cloud/bookworm/
+        releasepath: latest
+        imagename: debian-12-genericcloud-amd64
+        extension: qcow2
+        checksumname: SHA512SUMS
+        algorithm: sha512
 
   - name: AlmaLinux
     vendor: "AlmaLinux OS"

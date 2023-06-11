@@ -142,14 +142,14 @@ def ubuntu_update_check(release, last_checksum):
 
     current_checksum = web_get_checksum(checksum_url, imagename)
 
-    logger.debug("current_checksum: " + current_checksum)
-
     if current_checksum is None:
         logger.error(
             "no matching checksum found - check image (%s) "
             "and checksum filename (%s)" % (imagename, release["checksumname"])
         )
         return None
+
+    logger.debug("current_checksum: " + current_checksum)
 
     # as specified in image-sources.yaml
     # algorithm: sha256
