@@ -1,5 +1,5 @@
-
-  - name: {{ catalog['name'] }} {{ catalog['os_version'] }}
+{% for release_version in catalog['versions'] %}
+  - name: {{ catalog['name'] }} {{ catalog['versions'][release_version]['distribution_release'] }}
     format: qcow2
     login: fedora
     min_disk: 4
@@ -17,14 +17,12 @@
       hw_watchdog_action: reset
       replace_frequency: quarterly
       hotfix_hours: 0
-      uuid_validity: last-3
+      uuid_validity: last-1
       provided_until: none
       os_distro: fedora
-      os_version: '{{ catalog['os_version'] }}'
+      os_version: '{{ catalog['versions'][release_version]['distribution_release'] }}'
     tags: []
-    latest_checksum_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['checksumname'] }}
-    latest_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['imagename'] }}.{{ metadata['extension'] }}
-    versions:{% for release_version in catalog['versions'] %}
+    versions:
       - version: '{{ release_version }}'
         url: {{ catalog['versions'][release_version]['url'] }}
         checksum: {{ catalog['versions'][release_version]['checksum'] }}

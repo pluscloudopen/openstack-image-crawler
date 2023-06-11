@@ -4,6 +4,7 @@ import os
 from crawler.core.database import read_release_from_catalog
 from loguru import logger
 
+
 def export_image_catalog(
     connection, sources_catalog, updated_sources, local_repository, template_path
 ):
@@ -45,6 +46,7 @@ def export_image_catalog(
                     limit = release["limit"]
                 else:
                     limit = 3
+
                 release_catalog = read_release_from_catalog(
                     connection, distribution, release["name"], limit
                 )
