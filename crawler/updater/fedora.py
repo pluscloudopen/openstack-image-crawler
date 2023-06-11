@@ -60,7 +60,7 @@ def get_image_filename(release, images_url):
     else:
         return None
 
-def get_checksum(release, images_url, images_filename):
+def get_checksum(release, images_url, image_filename):
     request = requests.get(images_url, allow_redirects=True)
     soup = BeautifulSoup(request.text, "html.parser")
 
@@ -87,7 +87,7 @@ def get_checksum(release, images_url, images_filename):
         # skip comment starting with hash
         if re.match('^#', line):
             continue
-        if images_filename in line:
+        if image_filename in line:
             # logger.debug("matched: " + line)
             (filename, new_checksum) = line.split(" = ")
             # logger.debug("new_checksum: " + new_checksum)
