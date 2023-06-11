@@ -5,6 +5,7 @@ from crawler.updater.ubuntu import ubuntu_update_check
 from crawler.updater.debian import debian_update_check
 from crawler.updater.alma import alma_update_check
 from crawler.updater.flatcar import flatcar_update_check
+from crawler.updater.fedora import fedora_update_check
 
 
 def image_update_service(connection, source):
@@ -24,6 +25,8 @@ def image_update_service(connection, source):
             catalog_update = alma_update_check(release, last_checksum)
         elif "flatcar" in release["imagename"]:
             catalog_update = flatcar_update_check(release, last_checksum)
+        elif "Fedora" in release["imagename"]:
+            catalog_update = fedora_update_check(release, last_checksum)
         else:
             logger.error("Unsupported distribution " + source["name"] + " - please check your images-sources.yaml")
             raise SystemExit(1)
@@ -31,9 +34,13 @@ def image_update_service(connection, source):
             logger.info("Update found for " + source["name"] + " " + release["name"])
             logger.info("New release " + catalog_update["version"])
             # catalog_update anreichern mit _allen_ Daten für die DB
-            catalog_update["name"] = source["name"] + " " + release["name"]
             catalog_update["distribution_name"] = source["name"]
-            catalog_update["distribution_release"] = release["name"]
+            if "Fedora" in release["imagename"]:
+                catalog_update["name"] = source["name"] + " " + catalog_update["release_id"]
+                catalog_update["distribution_release"] = catalog_update["release_id"]
+            else:
+                catalog_update["name"] = source["name"] + " " + release["name"]
+                catalog_update["distribution_release"] = release["name"]
             catalog_update["release"] = release["name"]
 
             write_or_update_catalog_entry(connection, catalog_update)

@@ -1,4 +1,4 @@
-# ubuntu.py
+# flatcar.py
 #
 # crawl distribution Flatcar Container Linux
 
