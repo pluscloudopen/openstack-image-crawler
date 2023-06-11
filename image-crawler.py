@@ -6,7 +6,7 @@
 # whenever a new image is detected all relevant information needed for
 # maintaining an image catalog
 #
-# 2023-06-XX v0.4.0 christian.stelter@plusserver.com
+# 2023-06-11 v0.4.0 christian.stelter@plusserver.com
 
 import argparse
 import sys
@@ -30,8 +30,6 @@ from crawler.git.base import clone_or_pull, update_repository
 
 
 def main():
-    logger.info("plusserver Image Crawler v0.4.0 started")
-
     working_directory = os.getcwd()
     program_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -69,7 +67,30 @@ def main():
         required=False,
         help="check only for updates, do not export catalog",
     )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        required=False,
+        help="give more output for debugging",
+    )
     args = parser.parse_args()
+
+    if args.debug:
+        log_level = "DEBUG"
+        log_format = (
+            "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | "
+            "<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+        )
+    else:
+        log_level = "INFO"
+        log_format = (
+            "<level>{message}</level>"
+        )
+
+    logger.remove()
+    logger.add(sys.stderr, format=log_format, level=log_level, colorize=True)
+
+    logger.info("plusserver Image Crawler v0.4.0 started")
 
     # read configuration
     if args.config is not None:

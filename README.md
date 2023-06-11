@@ -8,6 +8,7 @@ Supported distributions:
 - Debian Linux
 - AlmaLinux
 - Flatcar Container Linux
+- Fedora Linux
 
 Note: Flatcar Container Linux offers only zipped images, so a direct upload via OpenStack Image Manager/Glance is not supported (yet).
 
@@ -52,7 +53,7 @@ Usage:
 ```
 ./image-crawler.py -h
 
-plusserver Image Crawler v4.0
+plusserver Image Crawler v0.4.0
 
 usage: image-crawler.py [-h] [--config CONFIG] [--sources SOURCES] [--init-db] [--export-only] [--updates-only]
 
@@ -65,6 +66,7 @@ optional arguments:
   --init-db          initialize image catalog database
   --export-only      export only existing image catalog
   --updates-only     check only for updates, do not export catalog
+  --debug            give more output for debugging
 ```
 
 ### Helper: Historian
