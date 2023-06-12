@@ -1,79 +1,56 @@
-from crawler.core.database import db_get_last_checksum, write_or_update_catalog_entry
-from crawler.web.generic import url_get_last_modified
-from crawler.web.directory import web_get_checksum, web_get_current_image_metadata
+from loguru import logger
 
-
-def release_update_check(release, last_checksum):
-    # works for Ubuntu, Debian
-    if not release["baseURL"].endswith("/"):
-        base_url = release["baseURL"] + "/"
-    else:
-        base_url = release["baseURL"]
-
-    # check on leading an trialing slash / for release path ?
-    checksum_url = base_url + release["releasepath"] + "/" + release["checksumname"]
-    # works for Ubuntu, Debian
-    # imagename _with_ proper extension to look for in checksum lists
-    imagename = release["imagename"] + "." + release["extension"]
-
-    current_checksum = web_get_checksum(checksum_url, imagename)
-    if current_checksum is None:
-        print(
-            "ERROR: no matching checksum found - check image (%s) "
-            "and checksum filename (%s)" % (imagename, release["checksumname"])
-        )
-        return None
-
-    current_checksum = release["algorithm"] + ":" + current_checksum
-
-    if current_checksum != last_checksum:
-        image_url = base_url + release["releasepath"] + "/" + imagename
-
-        image_filedate = url_get_last_modified(image_url)
-
-        if "immutable" in release and release["immutable"]:
-            update = {}
-            update["release_date"] = image_filedate
-            update["url"] = image_url
-            update["version"] = release['name']
-            update["checksum"] = current_checksum
-
-            return update
-
-        image_metadata = web_get_current_image_metadata(release, image_filedate)
-        if image_metadata is not None:
-
-            update = {}
-            update["release_date"] = image_metadata["release_date"]
-            update["url"] = image_metadata["url"]
-            update["version"] = image_metadata["version"]
-            update["checksum"] = current_checksum
-            return update
-        else:
-            return None
-
-    return None
+from crawler.core.database import db_get_last_checksum, write_or_update_catalog_entry, db_get_last_checksum_fedora
+from crawler.updater.ubuntu import ubuntu_update_check
+from crawler.updater.debian import debian_update_check
+from crawler.updater.alma import alma_update_check
+from crawler.updater.flatcar import flatcar_update_check
+from crawler.updater.fedora import fedora_update_check
 
 
 def image_update_service(connection, source):
     updated_releases = []
     for release in source["releases"]:
-        last_checksum = db_get_last_checksum(
-            connection, source["name"], release["name"]
-        )
-        catalog_update = release_update_check(release, last_checksum)
+        if "Fedora" in release["imagename"]:
+            last_checksum = db_get_last_checksum_fedora(
+                connection, source["name"]
+            )
+        else:
+            last_checksum = db_get_last_checksum(
+                connection, source["name"], release["name"]
+            )
+
+        logger.debug("last_checksum:" + last_checksum)
+
+        if "ubuntu" in release["imagename"]:
+            catalog_update = ubuntu_update_check(release, last_checksum)
+        elif "debian" in release["imagename"]:
+            catalog_update = debian_update_check(release, last_checksum)
+        elif "Alma" in release["imagename"]:
+            catalog_update = alma_update_check(release, last_checksum)
+        elif "flatcar" in release["imagename"]:
+            catalog_update = flatcar_update_check(release, last_checksum)
+        elif "Fedora" in release["imagename"]:
+            catalog_update = fedora_update_check(release, last_checksum)
+        else:
+            logger.error("Unsupported distribution " + source["name"] + " - please check your images-sources.yaml")
+            raise SystemExit(1)
         if catalog_update:
-            print("Update found for " + source["name"] + " " + release["name"])
-            print("New release " + catalog_update["version"])
+            logger.info("Update found for " + source["name"] + " " + release["name"])
+            logger.info("New release " + catalog_update["version"])
             # catalog_update anreichern mit _allen_ Daten für die DB
-            catalog_update["name"] = source["name"] + " " + release["name"]
             catalog_update["distribution_name"] = source["name"]
-            catalog_update["distribution_release"] = release["name"]
+            if "Fedora" in release["imagename"]:
+                catalog_update["name"] = source["name"] + " " + catalog_update["release_id"]
+                catalog_update["distribution_release"] = catalog_update["release_id"]
+            else:
+                catalog_update["name"] = source["name"] + " " + release["name"]
+                catalog_update["distribution_release"] = release["name"]
             catalog_update["release"] = release["name"]
 
             write_or_update_catalog_entry(connection, catalog_update)
             updated_releases.append(release["name"])
         else:
-            print("No update found for " + source["name"] + " " + release["name"])
+            logger.info("No update found for " + source["name"] + " " + release["name"])
 
     return updated_releases

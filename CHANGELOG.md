@@ -1,5 +1,15 @@
 # Changelog
 
+## 2023-06-11
+- refactoring of updater parts - split into single files for each distribution
+- removed generic release_update_check from updater/service.py
+- added support Flatcar Container Linux
+- updated README.md
+- added loguru for easy configuration of logging
+- added optional debug output (via loglevel)
+- added --debug as argument
+- added first try on Fedora Linux Support to crawler
+- added Debian Linux 12 aka bookworm to sample image-sources.yaml
 
 ## 2023-06-01
 - updated example Dockerfile to new repos

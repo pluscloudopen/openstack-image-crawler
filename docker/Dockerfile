@@ -16,7 +16,7 @@ RUN useradd -u ${HOST_UID} -s /bin/bash -c "crawler" -d "/opt/crawler" -m crawle
     libcap2-bin jq lsb-release software-properties-common curl dumb-init build-essential \
     python3-dev python3-pip python3-venv
 
-RUN git clone --depth 1 -b alma_slash_fix https://github.com/pluscloudopen/openstack-image-crawler.git /tmp/crawler && \
+RUN git clone --depth 1 https://github.com/pluscloudopen/openstack-image-crawler.git /tmp/crawler && \
     mv /tmp/crawler/* /opt/crawler/ && \
     rm -rf /tmp/crawler && \
     cd /opt/crawler && \

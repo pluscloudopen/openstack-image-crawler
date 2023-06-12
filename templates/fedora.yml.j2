@@ -1,8 +1,8 @@
-
-  - name: {{ catalog['name'] }} {{ catalog['os_version'] }}
+{% for release_version in catalog['versions'] %}
+  - name: {{ catalog['name'] }} {{ catalog['versions'][release_version]['distribution_release'] }}
     format: qcow2
-    login: core
-    min_disk: 10
+    login: fedora
+    min_disk: 4
     min_ram: 512
     status: active
     visibility: public
@@ -15,20 +15,18 @@
       hw_scsi_model: virtio-scsi
       hw_qemu_guest_agent: yes
       hw_watchdog_action: reset
-      replace_frequency: monthly
+      replace_frequency: quarterly
       hotfix_hours: 0
-      uuid_validity: last-3
+      uuid_validity: last-1
       provided_until: none
-      os_distro: flatcar
-      os_version: '{{ catalog['os_version'] }}'
+      os_distro: fedora
+      os_version: '{{ catalog['versions'][release_version]['distribution_release'] }}'
     tags: []
-    latest_checksum_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['checksumname'] }}
-    latest_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['imagename'] }}.{{ metadata['extension'] }}
-    versions:{% for release_version in catalog['versions'] %}
+    versions:
       - version: '{{ release_version }}'
         url: {{ catalog['versions'][release_version]['url'] }}
         checksum: {{ catalog['versions'][release_version]['checksum'] }}
         build_date: {{ catalog['versions'][release_version]['release_date'] }}
         image_source: {{ catalog['versions'][release_version]['url'] }}
-        image_description: https://www.flatcar.org/releases
+        image_description: https://docs.fedoraproject.org/en-US/fedora/latest/release-notes/
 {%- endfor %}

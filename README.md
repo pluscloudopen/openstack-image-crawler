@@ -2,6 +2,16 @@
 
 OpenStack Image Crawler for checking image sources, gathering update information and generating image catalog files for the [OpenStack Image Manager](https://github.com/osism/openstack-image-manager) (or similiar tools).
 
+Supported distributions:
+
+- Ubuntu Linux
+- Debian Linux
+- AlmaLinux
+- Flatcar Container Linux
+- Fedora Linux
+
+Note: Flatcar Container Linux offers only zipped images, so a direct upload via OpenStack Image Manager/Glance is not supported (yet).
+
 ## Requirements
 ### Git repository for holding the image catalogs (optional)
 
@@ -13,7 +23,7 @@ If there is no remote_repository entry in the config, the git actions are disabl
 
 ## Installation
 
-Tested on Ubuntu 20.04 LTS + 22.04 LTS (should work with Python 3.8+ on other OSs, too)
+Tested on Ubuntu 20.04 LTS + 22.04 LTS. Should work with Python 3.8+ on other OSs, too. Optional: build the docker container.
 
 ```
 sudo apt install git python3-pip python3-venv
@@ -43,7 +53,7 @@ Usage:
 ```
 ./image-crawler.py -h
 
-plusserver Image Crawler v0.1
+plusserver Image Crawler v0.4.0
 
 usage: image-crawler.py [-h] [--config CONFIG] [--sources SOURCES] [--init-db] [--export-only] [--updates-only]
 
@@ -56,6 +66,7 @@ optional arguments:
   --init-db          initialize image catalog database
   --export-only      export only existing image catalog
   --updates-only     check only for updates, do not export catalog
+  --debug            give more output for debugging
 ```
 
 ### Helper: Historian
