@@ -105,14 +105,24 @@ def db_get_last_entry(connection, distribution, release):
 
 
 def db_get_release_versions(connection, distribution, release, limit):
+
+    logger.debug("distribution: " + distribution + " release: " + release + " limit: " + str(limit))
     try:
         database_cursor = connection.cursor()
-        database_cursor.execute(
-            "SELECT name, release_date, version, distribution_name, "
-            "distribution_release, url, checksum FROM image_catalog "
-            "WHERE distribution_name = '%s' AND distribution_release = '%s' "
-            "ORDER BY id DESC LIMIT %d" % (distribution, release, limit)
-        )
+        if release == "all":
+            database_cursor.execute(
+                "SELECT name, release_date, version, distribution_name, "
+                "distribution_release, url, checksum FROM image_catalog "
+                "WHERE distribution_name = '%s'"
+                "ORDER BY id DESC LIMIT %d" % (distribution, limit)
+            )
+        else:
+            database_cursor.execute(
+                "SELECT name, release_date, version, distribution_name, "
+                "distribution_release, url, checksum FROM image_catalog "
+                "WHERE distribution_name = '%s' AND distribution_release = '%s' "
+                "ORDER BY id DESC LIMIT %d" % (distribution, release, limit)
+            )
     except sqlite3.OperationalError as error:
         logger.error(error)
         sys.exit(1)
@@ -136,15 +146,25 @@ def db_get_release_versions(connection, distribution, release, limit):
 def read_version_from_catalog(connection, distribution, release, version):
     try:
         database_cursor = connection.cursor()
-        database_cursor.execute(
-            "SELECT version,checksum,url,release_date "
-            "FROM (SELECT * FROM image_catalog "
-            "WHERE distribution_name = '%s' "
-            "AND distribution_release = '%s' "
-            "AND version ='%s' "
-            "ORDER BY id DESC LIMIT 1) "
-            "ORDER BY ID" % (distribution, release, version)
-        )
+        if release == "all":
+            database_cursor.execute(
+                "SELECT version,checksum,url,release_date "
+                "FROM (SELECT * FROM image_catalog "
+                "WHERE distribution_name = '%s' "
+                "AND version ='%s' "
+                "ORDER BY id DESC LIMIT 1) "
+                "ORDER BY ID" % (distribution, version)
+            )
+        else:
+            database_cursor.execute(
+                "SELECT version,checksum,url,release_date "
+                "FROM (SELECT * FROM image_catalog "
+                "WHERE distribution_name = '%s' "
+                "AND distribution_release = '%s' "
+                "AND version ='%s' "
+                "ORDER BY id DESC LIMIT 1) "
+                "ORDER BY ID" % (distribution, release, version)
+            )
     except sqlite3.OperationalError as error:
         logger.error(error)
         raise SystemExit(1)
