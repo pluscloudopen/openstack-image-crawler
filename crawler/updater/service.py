@@ -6,6 +6,8 @@ from crawler.updater.debian import debian_update_check
 from crawler.updater.alma import alma_update_check
 from crawler.updater.flatcar import flatcar_update_check
 from crawler.updater.fedora import fedora_update_check
+from crawler.updater.rocky import rocky_update_check
+
 
 
 def image_update_service(connection, source):
@@ -32,6 +34,9 @@ def image_update_service(connection, source):
             catalog_update = flatcar_update_check(release, last_checksum)
         elif "Fedora" in release["imagename"]:
             catalog_update = fedora_update_check(release, last_checksum)
+        elif "Rocky" in release["imagename"]:
+            catalog_update = rocky_update_check(release, last_checksum)
+
         else:
             logger.error("Unsupported distribution " + source["name"] + " - please check your images-sources.yaml")
             raise SystemExit(1)

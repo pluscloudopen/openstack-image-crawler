@@ -102,8 +102,7 @@ sources:
         extension: img.gz
         checksumname: flatcar_production_openstack_image.img.gz.DIGESTS
         algorithm: md5
-        immutable: true
-
+        
   - name: Fedora
     vendor: "Fedora Project"
     releases:
@@ -113,6 +112,28 @@ sources:
         releasepath: releases
         imagepath: Cloud/x86_64/images
         imagename: Fedora-Cloud-Base-(\d+)-(\d+\.\d+).x86_64
+        extension: qcow2
+        checksumname: CHECKSUM
+        algorithm: sha256
+        limit: 1
+        
+  - name: RockyLinux
+    vendor: "Rocky Linux Foundation"
+    releases:
+      - name: '8'
+        codename: 'none'
+        baseURL: https://download.rockylinux.org/pub/rocky/
+        imagepath: images/x86_64
+        imagename: Rocky-8-GenericCloud.latest.x86_64
+        extension: qcow2
+        checksumname: CHECKSUM
+        algorithm: sha256
+        limit: 1
+      - name: '9'
+        codename: 'none'
+        baseURL: https://download.rockylinux.org/pub/rocky/
+        imagepath: images/x86_64
+        imagename: Rocky-9-GenericCloud.latest.x86_64
         extension: qcow2
         checksumname: CHECKSUM
         algorithm: sha256

@@ -10,6 +10,7 @@
 - added --debug as argument
 - added first try on Fedora Linux Support to crawler
 - added Debian Linux 12 aka bookworm to sample image-sources.yaml
+- added Rocky Linux
 
 ## 2023-06-01
 - updated example Dockerfile to new repos

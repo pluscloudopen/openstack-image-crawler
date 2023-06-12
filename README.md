@@ -9,6 +9,8 @@ Supported distributions:
 - AlmaLinux
 - Flatcar Container Linux
 - Fedora Linux
+- Rocky Linux
+
 
 Note: Flatcar Container Linux offers only zipped images, so a direct upload via OpenStack Image Manager/Glance is not supported (yet).
 
