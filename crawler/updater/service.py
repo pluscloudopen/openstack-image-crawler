@@ -1,6 +1,6 @@
 from loguru import logger
 
-from crawler.core.database import db_get_last_checksum, write_or_update_catalog_entry, db_get_last_checksum_fedora
+from crawler.core.database import db_get_last_checksum, write_or_update_catalog_entry # db_get_last_checksum_fedora
 from crawler.updater.ubuntu import ubuntu_update_check
 from crawler.updater.debian import debian_update_check
 from crawler.updater.alma import alma_update_check
@@ -13,14 +13,9 @@ from crawler.updater.rocky import rocky_update_check
 def image_update_service(connection, source):
     updated_releases = []
     for release in source["releases"]:
-        if "Fedora" in release["imagename"]:
-            last_checksum = db_get_last_checksum_fedora(
-                connection, source["name"]
-            )
-        else:
-            last_checksum = db_get_last_checksum(
-                connection, source["name"], release["name"]
-            )
+        last_checksum = db_get_last_checksum(
+            connection, source["name"], release["name"]
+        )
 
         logger.debug("last_checksum:" + last_checksum)
 

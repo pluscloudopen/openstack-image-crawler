@@ -50,39 +50,46 @@ def database_initialize(name, prog_dirname):
         connection.close()
         logger.info("New database created under %s" % name)
 
-def db_get_last_checksum_fedora(connection, distribution):
-    try:
-        database_cursor = connection.cursor()
-        database_cursor.execute(
-            "SELECT checksum FROM image_catalog "
-            "WHERE distribution_name = '%s' "
-            "ORDER BY id DESC LIMIT 1" % distribution
-        )
-    except sqlite3.OperationalError as error:
-        logger.error(error)
-        raise SystemExit(1)
+# def db_get_last_checksum_fedora(connection, distribution):
+#     try:
+#         database_cursor = connection.cursor()
+#         database_cursor.execute(
+#             "SELECT checksum FROM image_catalog "
+#             "WHERE distribution_name = '%s' "
+#             "ORDER BY id DESC LIMIT 1" % distribution
+#         )
+#     except sqlite3.OperationalError as error:
+#         logger.error(error)
+#         raise SystemExit(1)
 
-    row = database_cursor.fetchone()
+#     row = database_cursor.fetchone()
 
-    if row is None:
-        logger.debug("no previous entries found")
-        last_checksum = "sha256:none"
-    else:
-        last_checksum = row[0]
+#     if row is None:
+#         logger.debug("no previous entries found")
+#         last_checksum = "sha256:none"
+#     else:
+#         last_checksum = row[0]
 
-    database_cursor.close()
+#     database_cursor.close()
 
-    return last_checksum
+#     return last_checksum
 
 def db_get_last_checksum(connection, distribution, release):
     try:
         database_cursor = connection.cursor()
-        database_cursor.execute(
-            "SELECT checksum FROM image_catalog "
-            "WHERE distribution_name = '%s' "
-            "AND distribution_release = '%s' "
-            "ORDER BY id DESC LIMIT 1" % (distribution, release)
-        )
+        if release == "all":
+            database_cursor.execute(
+                "SELECT checksum FROM image_catalog "
+                "WHERE distribution_name = '%s' "
+                "ORDER BY id DESC LIMIT 1" % distribution
+            )
+        else:
+            database_cursor.execute(
+                "SELECT checksum FROM image_catalog "
+                "WHERE distribution_name = '%s' "
+                "AND distribution_release = '%s' "
+                "ORDER BY id DESC LIMIT 1" % (distribution, release)
+            )
     except sqlite3.OperationalError as error:
         logger.error(error)
         raise SystemExit(1)
@@ -138,9 +145,12 @@ def db_get_release_versions(connection, distribution, release, limit):
         last_entry["url"] = row[5]
         last_entry["checksum"] = row[6]
 
-    database_cursor.close()
+        database_cursor.close()
 
-    return last_entry
+        return last_entry
+    else:
+        # or empty dict?
+        return None
 
 
 def read_version_from_catalog(connection, distribution, release, version):

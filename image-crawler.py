@@ -6,7 +6,7 @@
 # whenever a new image is detected all relevant information needed for
 # maintaining an image catalog
 #
-# 2023-06-11 v0.4.0 christian.stelter@plusserver.com
+# 2023-06-13 v0.4.1 christian.stelter@plusserver.com
 
 import argparse
 import sys
@@ -88,9 +88,9 @@ def main():
         )
 
     logger.remove()
-    logger.add(sys.stderr, format=log_format, level=log_level, colorize=True)
+    logger.add(sys.stderr, format=log_format, level=log_level, colorize=False)
 
-    logger.info("plusserver Image Crawler v0.4.0 started")
+    logger.info("plusserver Image Crawler v0.4.1 started")
 
     # read configuration
     if args.config is not None:
