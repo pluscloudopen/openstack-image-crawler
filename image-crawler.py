@@ -112,7 +112,8 @@ def main():
 
     image_source_catalog = config_read(sources_filename, "source catalog")
     if image_source_catalog is None:
-        raise SystemExit("Unable to open image source catalog " + sources_filename)
+        logger.error("Unable to open image source catalog " + sources_filename)
+        raise SystemExit(1)
 
     # initialize database when run with --init-db
     if args.init_db:
