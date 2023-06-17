@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
+#
+# historian.py - this is just a workaround
+#
+# 2023-06-17 christian.stelter@plusserver.com
+
 import sys
 from crawler.web.generic import url_exists
 from crawler.web.directory import web_get_checksum
-from crawler.core.database import (
-    database_connect,
-    database_disconnect,
-    write_catalog_entry,
-)
+from crawler.core.database import database_connect, database_disconnect, write_catalog_entry
 
 import requests
 from bs4 import BeautifulSoup
+from pprint import pprint
 
 from crawler.core.config import config_read
 
@@ -20,14 +22,14 @@ def get_all_versions_with_paths_from_directory(release):
     version_paths = {}
 
     # get release directory content
-    if "debian" in release["imagename"]:
-        requestURL = release["baseURL"]
-        version_regex = re.compile(r"(\d{8}-\d*)")
+    if "debian" in release['imagename']:
+        requestURL = release['baseURL']
+        version_regex = re.compile(r'(\d{8}-\d*)')
         path_regex = version_regex
-    elif "ubuntu" in release["imagename"]:
-        requestURL = release["baseURL"]
-        version_regex = re.compile(r"release-(\d{8})\.*\d*")
-        path_regex = re.compile(r"(release-\d{8}\.*\d*)")
+    elif "ubuntu" in release['imagename']:
+        requestURL = release['baseURL']
+        version_regex = re.compile(r'release-(\d{8})\.*\d*')
+        path_regex = re.compile(r'(release-\d{8}\.*\d*)')
     else:
         # not yet supported
         return version_paths
@@ -41,7 +43,7 @@ def get_all_versions_with_paths_from_directory(release):
 
     last_version = ""
     for link in soup.find_all("a"):
-        data = link.get("href")
+        data = link.get('href')
         # print(data)
         match = version_regex.search(data)
         if match is not None:
@@ -51,7 +53,7 @@ def get_all_versions_with_paths_from_directory(release):
                 version = match.group(1)
                 version_paths[version] = {}
                 path_match = path_regex.search(data)
-                version_paths[version]["path"] = path_match.group(1)
+                version_paths[version]['path'] = path_match.group(1)
                 last_version = version
 
     return version_paths
@@ -59,13 +61,16 @@ def get_all_versions_with_paths_from_directory(release):
 
 # only Debian and Ubuntu?
 def get_version_path(release, version):
+
+    pprint(version)
+    pprint(release)
     # get release directory content
-    if "debian" in release["imagename"]:
-        requestURL = release["baseURL"]
-        version_regex = re.compile(r"\d8-\d*")
-    elif "ubuntu" in release["imagename"]:
-        requestURL = release["baseURL"]
-        version_regex = re.compile(r"release-\d{8}\.*\d*")
+    if "debian" in release['imagename']:
+        requestURL = release['baseURL']
+        version_regex = re.compile(r'\d8-\d*')
+    elif "ubuntu" in release['imagename']:
+        requestURL = release['baseURL']
+        version_regex = re.compile(r'release-\d{8}\.*\d*')
     # not yet supported
     # else:
     #     requestURL = release['baseURL'] + release['releasepath']
@@ -75,7 +80,7 @@ def get_version_path(release, version):
     soup = BeautifulSoup(request.text, "html.parser")
 
     for link in soup.find_all("a"):
-        data = link.get("href")
+        data = link.get('href')
         if data.find(version) != -1:
             match = version_regex.search(data)
             if match is not None:
@@ -88,14 +93,12 @@ def get_version_path(release, version):
 
 
 def get_checksum_from_version_path(release, version_path):
-    if "debian" in release["imagename"]:
-        url = release["baseURL"] + version_path + "/" + release["checksumname"]
-        imagename_fq = (
-            release["imagename"] + "-" + version_path + "." + release["extension"]
-        )
-    elif "ubuntu" in release["imagename"]:
-        url = release["baseURL"] + version_path + "/" + release["checksumname"]
-        imagename_fq = release["imagename"] + "." + release["extension"]
+    if "debian" in release['imagename']:
+        url = release['baseURL'] + version_path + "/" + release['checksumname']
+        imagename_fq = release['imagename'] + "-" + version_path + "." + release['extension']
+    elif "ubuntu" in release['imagename']:
+        url = release['baseURL'] + version_path + "/" + release['checksumname']
+        imagename_fq = release['imagename'] + "." + release['extension']
     else:
         # not yet supported
         return None
@@ -106,18 +109,18 @@ def get_checksum_from_version_path(release, version_path):
 
 def get_correct_version_path(release, version):
     # should be needed for ubuntu with its .x ending paths
-    if "debian" in release["imagename"] or "ubuntu" in release["imagename"]:
-        requestURL = release["baseURL"]
+    if "debian" in release['imagename'] or "ubuntu" in release['imagename']:
+        requestURL = release['baseURL']
     else:
-        requestURL = release["baseURL"] + release["releasepath"]
+        requestURL = release['baseURL'] + release['releasepath']
 
     request = requests.get(requestURL, allow_redirects=True)
     soup = BeautifulSoup(request.text, "html.parser")
 
     for link in soup.find_all("a"):
-        data = link.get("href")
-        if data.endswith("/"):
-            path = data.replace("/", "")
+        data = link.get('href')
+        if data.endswith('/'):
+            path = data.replace('/','')
         else:
             path = data
 
@@ -129,53 +132,34 @@ def get_correct_version_path(release, version):
 
 
 def get_version_metadata(release, version):
+    if not release['baseURL'].endswith('/'):
+        base_url = release['baseURL'] + "/"
+    else:
+        base_url = release['baseURL']
+
     metadata = {}
 
     # 1. check path
-    if "debian" in release["imagename"]:
-        url = (
-            release["baseURL"]
-            + version
-            + "/"
-            + release["imagename"]
-            + "-"
-            + version
-            + "."
-            + release["extension"]
-        )
-    elif "ubuntu" in release["imagename"]:
-        url = (
-            release["baseURL"]
-            + "release-"
-            + version
-            + "/"
-            + release["imagename"]
-            + "."
-            + release["extension"]
-        )
+    if "debian" in release['imagename']:
+        url = release['baseURL'] + version + "/" + release['imagename'] + "-" + version + "." + release['extension']
+    elif "ubuntu" in release['imagename']:
+        url = release['baseURL'] + "release-" + version + "/" + release['imagename'] + "." + release['extension']
     else:
         # not yet supported
         return metadata
 
     if url_exists(url):
-        metadata["url"] = url
-        if "debian" in release["imagename"]:
+        metadata['url'] = url
+        if "debian" in release['imagename']:
             version_path = version
-        elif "ubuntu" in release["imagename"]:
+        elif "ubuntu" in release['imagename']:
             version_path = "release-" + version
     else:
-        if "ubuntu" in release["imagename"]:
+        if "ubuntu" in release['imagename']:
             version_path = get_correct_version_path(release, version)
-            url = (
-                release["baseURL"]
-                + version_path
-                + "/"
-                + release["imagename"]
-                + "."
-                + release["extension"]
-            )
+            url = release['baseURL'] + version_path + "/" + release['imagename'] + "." + release['extension']
             if url_exists(url):
-                metadata["url"] = url
+                metadata['url'] = url
             else:
                 print("WARNING %s does not exist" % url)
                 return metadata
@@ -189,63 +173,62 @@ def get_version_metadata(release, version):
         print("WARNING: Could not get checksum for version %s" % version)
         return {}
 
-    metadata["checksum"] = release["algorithm"] + ":" + checksum
+    metadata['checksum'] = release['algorithm'] + ":" + checksum
 
     # 3. extract release date from version
     release_date = version[0:4] + "-" + version[4:6] + "-" + version[6:8]
-    metadata["release_date"] = release_date
+    metadata['release_date'] = release_date
 
     # 4. add version to metadata
-    metadata["version"] = version
+    metadata['version'] = version
 
     return metadata
 
 
 def main():
     # read configuration
-    config_filename = os.path.dirname(os.path.abspath(__file__)) + "etc/config.yaml"
+    config_filename = "etc/config.yaml"
 
     config = config_read(config_filename, "configuration")
     if config is None:
         raise SystemExit("\nERROR: Unable to open config " + config_filename)
 
     # read the image sources
-    sources_filename = config["sources_name"]
+    sources_filename = config['sources_name']
 
     image_source_catalog = config_read(sources_filename, "source catalog")
     if image_source_catalog is None:
         raise SystemExit("Unable to open image source catalog " + sources_filename)
 
     # connect to database
-    database = database_connect(config["database_name"])
+    database = database_connect(config['database_name'])
     if database is None:
-        print("\nERROR: Could not open database %s" % config["database_name"])
-        print(
-            '\nRun "./image-crawler.py --init-db" to create a new database OR config check your etc/config.yaml'
-        )
+        print("\nERROR: Could not open database %s" % config['database_name'])
+        print("\nRun \"./image-crawler.py --init-db\" to create a new database OR config check your etc/config.yaml")
         sys.exit(1)
 
-    for source in image_source_catalog["sources"]:
-        for release in source["releases"]:
-            print("Crawling %s %s" % (source["name"], release["name"]))
-            version_paths = get_all_versions_with_paths_from_directory(release)
-            for version in version_paths:
-                print("Getting metadata for version %s" % version)
-                catalog_update = get_version_metadata(release, version)
-                if not catalog_update:
-                    print(
-                        "WARNING: Skipping version %s due to missing metadata" % version
-                    )
-                else:
-                    catalog_update["name"] = source["name"] + " " + release["name"]
-                    catalog_update["distribution_name"] = source["name"]
-                    catalog_update["distribution_release"] = release["name"]
-                    catalog_update["release"] = release["name"]
+    for source in image_source_catalog['sources']:
+        for release in source['releases']:
+            if "ubuntu" in release['imagename'] or "debian" in release['imagename']:
+                print("Crawling %s %s" % (source['name'], release['name']))
+                # print(get_all_versions_with_paths_from_directory(release))
+                version_paths = get_all_versions_with_paths_from_directory(release)
+                for version in version_paths:
+                    print("Getting metadata for version %s" % version)
+                    catalog_update = get_version_metadata(release, version)
+                    if not catalog_update:
+                        print("WARNING: Skipping version %s due to missing metadata" % version)
+                    else:
+                        catalog_update['name'] = source['name'] + " " + release['name']
+                        catalog_update['distribution_name'] = source['name']
+                        catalog_update['distribution_release'] = release['name']
+                        catalog_update['release'] = release['name']
 
-                    write_catalog_entry(database, catalog_update)
+                        write_catalog_entry(database, catalog_update)
+            else:
+                print("historian.py does NOT support %s %s" % (source['name'], release['name']))
 
     database_disconnect(database)
-
 
 if __name__ == "__main__":
     main()
