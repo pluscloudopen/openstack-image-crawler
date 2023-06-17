@@ -129,7 +129,10 @@ dmypy.json
 
 .DS_Store
 .oic/
-lib/image-catalog.db
+lib/image-catalog.db*
 repository/
 test/
 .vscode/
+image-catalog
+templates/*pske*
+etc/image-sources.yaml.*

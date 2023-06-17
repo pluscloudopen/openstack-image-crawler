@@ -1,5 +1,14 @@
 # Changelog
 
+## 2023-06-XX
+
+- reverted historian.py to last known working version, added notification for unsupported distributions
+- improved exporter - now warns when there is no release data in database
+- added loguru to git/base.py
+- changed logging
+- improved git error handling
+- improved database handling for releases with "all" as introduced with Fedora
+
 ## 2023-06-11
 - refactoring of updater parts - split into single files for each distribution
 - removed generic release_update_check from updater/service.py
