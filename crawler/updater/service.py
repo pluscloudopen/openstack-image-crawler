@@ -2,7 +2,7 @@ from loguru import logger
 
 from crawler.core.database import db_get_last_checksum, write_or_update_catalog_entry # db_get_last_checksum_fedora
 from crawler.updater.ubuntu import ubuntu_update_check, ubuntu_crawl_release
-from crawler.updater.debian import debian_update_check
+from crawler.updater.debian import debian_update_check, debian_crawl_release
 from crawler.updater.alma import alma_update_check
 from crawler.updater.flatcar import flatcar_update_check
 from crawler.updater.fedora import fedora_update_check
@@ -12,16 +12,16 @@ from crawler.updater.rocky import rocky_update_check
 
 
 def image_crawl_back_service(connection, source):
+    catalog_entry_list = []
+
     for release in source["releases"]:
         if "ubuntu" in release["imagename"]:
             catalog_entry_list = ubuntu_crawl_release(release)
-            logger.debug("Versions found for " +
-                         source["name"] + " " +
-                         release["name"])
+        elif "debian" in release["imagename"]:
+            catalog_entry_list = debian_crawl_release(release)
         else:
-            logger.error("Unsupported distribution " + source["name"] +
-                         " - please check your images-sources.yaml")
-            raise SystemExit(1)
+            logger.warning("Crawling previous versions of distribution " + source["name"] +
+                         " not (yet) supported")
 
         if catalog_entry_list:
             logger.info("Versions found for " + source["name"] + " " + release["name"])

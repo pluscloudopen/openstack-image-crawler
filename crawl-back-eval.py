@@ -4,7 +4,7 @@
 #
 # evaluation of a historian replacement
 #
-# 2023-06-18 v0.4.0 christian.stelter@plusserver.com
+# 2023-06-18 v0.0.2 christian.stelter@plusserver.com
 
 import argparse
 import sys
@@ -49,7 +49,7 @@ def main():
     logger.remove()
     logger.add(sys.stderr, format=log_format, level=log_level, colorize=True)
 
-    logger.info("crawl back evaluator v0.0.1 started")
+    logger.info("crawl back evaluator v0.0.2 started")
 
     # read configuration
     if args.config is not None:
