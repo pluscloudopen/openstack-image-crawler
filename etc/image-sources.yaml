@@ -116,7 +116,7 @@ sources:
         extension: qcow2
         checksumname: CHECKSUM
         algorithm: sha256
-        limit: 1
+        limit: 3
 
   - name: RockyLinux
     vendor: "Rocky Linux Foundation"
