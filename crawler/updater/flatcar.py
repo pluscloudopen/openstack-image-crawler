@@ -54,7 +54,7 @@ def get_metadata(release, image_filedate):
     return {
         "url": build_image_url(release, version),
         "version": version,
-        "release_date": filedate,
+        "release_date": image_filedate,
     }
 
 def flatcar_update_check(release, last_checksum):

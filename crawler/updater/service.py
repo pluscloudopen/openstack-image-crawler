@@ -12,22 +12,55 @@ from crawler.updater.rocky import rocky_update_check
 
 
 def image_crawl_back_service(connection, source):
-    catalog_entry_list = []
-
     for release in source["releases"]:
+        catalog_entry_list = []
         if "ubuntu" in release["imagename"]:
             catalog_entry_list = ubuntu_crawl_release(release)
         elif "debian" in release["imagename"]:
             catalog_entry_list = debian_crawl_release(release)
         else:
-            logger.warning("Crawling previous versions of distribution " + source["name"] +
-                         " not (yet) supported")
+            # fall back for distributions with only latest release online
+            # or yet unsupported distribution
+            last_checksum = db_get_last_checksum(
+                    connection, source["name"], release["name"]
+                )
+            if "Alma" in release["imagename"]:
+                logger.warning("Only the last Alma Linux release is online" +
+                               " - falling back to normal update service")
+                catalog_entry = alma_update_check(release, last_checksum)
+                if catalog_entry:
+                    catalog_entry_list.append(catalog_entry)
+            elif "flatcar" in release["imagename"]:
+                logger.warning("Crawling of previous Flatcat Linux versions" +
+                               " not yet supported - falling back to normal" +
+                               " update service")
+                catalog_entry = flatcar_update_check(release, last_checksum)
+                if catalog_entry:
+                    catalog_entry_list.append(catalog_entry)
+            elif "Fedora" in release["imagename"]:
+                logger.warning("Crawling of previous Fedora Linux versions" +
+                               " not yet supported - falling back to normal" +
+                               " update service")
+                catalog_entry = fedora_update_check(release, last_checksum)
+                if catalog_entry:
+                    catalog_entry_list.append(catalog_entry)
+            elif "Rocky" in release["imagename"]:
+                logger.warning("Crawling of previous Rocky Linux version" +
+                               " not yet supported - falling back to normal" +
+                               " update service")
+                catalog_entry = rocky_update_check(release, last_checksum)
+                if catalog_entry:
+                    catalog_entry_list.append(catalog_entry)
+            else:
+                # not yet supported distribution
+                logger.warning("Crawling versions of distribution " + source["name"] +
+                            " not (yet) supported")
 
         if catalog_entry_list:
             logger.info("Versions found for " + source["name"] + " " + release["name"])
             for catalog_entry in catalog_entry_list:
                 logger.info("Version found " + catalog_entry["version"])
-                # catalog_update anreichern mit _allen_ Daten für die DB
+                # catalog_entry anreichern mit _allen_ Daten für die DB
                 catalog_entry["distribution_name"] = source["name"]
                 if "Fedora" in release["imagename"]:
                     catalog_entry["name"] = source["name"] + " " + catalog_entry["release_id"]
@@ -38,9 +71,8 @@ def image_crawl_back_service(connection, source):
                 catalog_entry["release"] = release["name"]
 
                 write_or_update_catalog_entry(connection, catalog_entry)
-                # Commit message?
+                # Commit message or just "initial commit"
                 # catalog_entry_list.append(release["name"])
-
 
 def image_update_service(connection, source):
     updated_releases = []
