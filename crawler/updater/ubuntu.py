@@ -4,6 +4,7 @@
 
 import requests
 import datetime
+import re
 
 from crawler.web.generic import url_get_last_modified
 from crawler.web.directory import web_get_checksum, web_get_current_image_metadata
@@ -11,6 +12,7 @@ from crawler.web.directory import web_get_checksum, web_get_current_image_metada
 from bs4 import BeautifulSoup
 from loguru import logger
 
+from pprint import pprint
 
 def build_image_url(release, versionpath):
     if not release["baseURL"].endswith("/"):
@@ -179,3 +181,79 @@ def ubuntu_update_check(release, last_checksum):
             return None
 
     return None
+
+def ubuntu_crawl_release(release):
+    version_dir_list = []
+    updates_list = []
+
+    # as specified in image-sources.yaml
+    # baseURL: https://cloud-images.ubuntu.com/releases/jammy/
+    if not release["baseURL"].endswith("/"):
+        base_url = release["baseURL"] + "/"
+    else:
+        base_url = release["baseURL"]
+
+    # make it configurable?
+    release_pattern = re.compile(r"release-(\d{8})")
+    releases_path = base_url
+
+    # as specified in image-sources.yaml
+    # imagename: ubuntu-22.04-server-cloudimg-amd64
+    # extension: img
+    imagename = release["imagename"] + "." + release["extension"]
+
+    logger.info("Looking for release versions at: " + releases_path)
+
+    request = requests.get(releases_path, allow_redirects=True)
+    soup = BeautifulSoup(request.text, "html.parser")
+
+    last_link = ""
+
+    # we need the last link matching release_pattern
+    for link in soup.find_all("a"):
+        data = link.get("href")
+
+        if release_pattern.search(data):
+            last_link = data
+            version_dir_list.append(last_link)
+            # logger.debug("matching entry: " + last_link)
+
+    # number of entries to crawl back as defined in image-sources.yaml
+    # via limit - can be set per release
+    if "limit" in release:
+        limit = release["limit"]
+    else:
+        limit = 3
+
+    for version_path in version_dir_list[-limit:]:
+        extract = release_pattern.search(version_path)
+
+        # version_path contains "20230616" release date
+        extract = release_pattern.search(version_path)
+        version = extract.group(1)
+
+        logger.debug("Version to work on: " + version)
+
+        checksum_url = base_url + version_path + release["checksumname"]
+        version_checksum = web_get_checksum(checksum_url, imagename)
+        version_checksum = release["algorithm"] + version_checksum
+
+        logger.debug("checksum_url: " + version_checksum)
+
+        release_date = release_date_from_version(version)
+
+        logger.debug("release_date: " + release_date)
+
+        url = build_image_url(release, version_path)
+
+        logger.debug("url: " + url)
+
+        version_entry = {}
+        version_entry["release_date"] = release_date
+        version_entry["url"] = url
+        version_entry["version"] = version
+        version_entry["checksum"] = version_checksum
+
+        updates_list.append(version_entry)
+
+    return updates_list

@@ -11,7 +11,6 @@
 import argparse
 import sys
 import os
-# import logging
 from loguru import logger
 from crawler.core.config import config_read
 from crawler.core.database import (
@@ -22,11 +21,6 @@ from crawler.core.database import (
 from crawler.core.exporter import export_image_catalog, export_image_catalog_all
 from crawler.core.main import crawl_image_sources
 from crawler.git.base import clone_or_pull, update_repository
-
-# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
-
-# logging.basicConfig(level=logging.DEBUG)
-# logger = logging.getLogger(__name__)
 
 
 def main():
@@ -79,7 +73,7 @@ def main():
         log_level = "DEBUG"
         log_format = (
             "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | "
-            "<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+            "<cyan>{name}:{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
         )
     else:
         log_level = "INFO"
