@@ -1,0 +1,32 @@
+{% for release_version in catalog['versions'] %}
+  - name: {{ catalog['name'] }} {{ catalog['versions'][release_version]['distribution_release'] }}
+    format: qcow2
+    login: fedora
+    min_disk: 4
+    min_ram: 512
+    status: active
+    visibility: public
+    multi: true
+    meta:
+      architecture: x86_64
+      hypervisor_type: qemu
+      hw_disk_bus: scsi
+      hw_rng_model: virtio
+      hw_scsi_model: virtio-scsi
+      hw_qemu_guest_agent: yes
+      hw_watchdog_action: reset
+      replace_frequency: quarterly
+      hotfix_hours: 0
+      uuid_validity: last-1
+      provided_until: none
+      os_distro: fedora
+      os_version: '{{ catalog['versions'][release_version]['distribution_release'] }}'
+    tags: []
+    versions:
+      - version: '{{ release_version }}'
+        url: {{ catalog['versions'][release_version]['url'] }}
+        checksum: {{ catalog['versions'][release_version]['checksum'] }}
+        build_date: {{ catalog['versions'][release_version]['release_date'] }}
+        image_source: {{ catalog['versions'][release_version]['url'] }}
+        image_description: https://docs.fedoraproject.org/en-US/fedora/latest/release-notes/
+{% endfor %}

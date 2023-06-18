@@ -4,14 +4,6 @@ sources:
   - name: Ubuntu
     vendor: "Canonical Ltd."
     releases:
-      - name: '18.04'
-        codename: bionic
-        baseURL: https://cloud-images.ubuntu.com/releases/bionic/
-        releasepath: release
-        imagename: ubuntu-18.04-server-cloudimg-amd64
-        extension: img
-        checksumname: SHA256SUMS
-        algorithm: sha256
       - name: '20.04'
         codename: focal
         baseURL: https://cloud-images.ubuntu.com/releases/focal/
@@ -28,6 +20,7 @@ sources:
         extension: img
         checksumname: SHA256SUMS
         algorithm: sha256
+        limit: 5
 
   - name: Ubuntu Minimal
     vendor: "Canonical Ltd."
@@ -68,6 +61,14 @@ sources:
         extension: qcow2
         checksumname: SHA512SUMS
         algorithm: sha512
+      - name: '12'
+        codename: bookworm
+        baseURL: https://cloud.debian.org/images/cloud/bookworm/
+        releasepath: latest
+        imagename: debian-12-genericcloud-amd64
+        extension: qcow2
+        checksumname: SHA512SUMS
+        algorithm: sha512
 
   - name: AlmaLinux
     vendor: "AlmaLinux OS"
@@ -80,6 +81,7 @@ sources:
         extension: qcow2
         checksumname: CHECKSUM
         algorithm: sha256
+        limit: 1
       - name: '9'
         codename: 'none'
         baseURL: https://repo.almalinux.org/almalinux/9/
@@ -88,3 +90,52 @@ sources:
         extension: qcow2
         checksumname: CHECKSUM
         algorithm: sha256
+        limit: 1
+
+  - name: Flatcar
+    vendor: "Kinvolk"
+    releases:
+      - name: 'stable'
+        codename: 'none'
+        baseURL: https://stable.release.flatcar-linux.net/amd64-usr
+        releasepath: current
+        imagename: flatcar_production_openstack_image
+        extension: img.gz
+        checksumname: flatcar_production_openstack_image.img.gz.DIGESTS
+        algorithm: md5
+
+  - name: Fedora
+    vendor: "Fedora Project"
+    releases:
+      - name: 'all'
+        codename: none
+        baseURL: https://ftp.plusline.net/fedora/linux/
+        releasepath: releases
+        imagepath: Cloud/x86_64/images
+        imagename: Fedora-Cloud-Base-(\d+)-(\d+\.\d+).x86_64
+        extension: qcow2
+        checksumname: CHECKSUM
+        algorithm: sha256
+        limit: 3
+
+  - name: RockyLinux
+    vendor: "Rocky Linux Foundation"
+    releases:
+      - name: '8'
+        codename: 'none'
+        baseURL: https://download.rockylinux.org/pub/rocky/
+        imagepath: images/x86_64
+        imagename: Rocky-8-GenericCloud.latest.x86_64
+        extension: qcow2
+        checksumname: CHECKSUM
+        algorithm: sha256
+        limit: 1
+      - name: '9'
+        codename: 'none'
+        baseURL: https://download.rockylinux.org/pub/rocky/
+        imagepath: images/x86_64
+        imagename: Rocky-9-GenericCloud.latest.x86_64
+        extension: qcow2
+        checksumname: CHECKSUM
+        algorithm: sha256
+        limit: 1
