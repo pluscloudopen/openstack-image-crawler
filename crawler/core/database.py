@@ -246,7 +246,10 @@ def write_or_update_catalog_entry(connection, update):
     )
 
     if update["version"] in existing_entry["versions"]:
-        logger.info("Updating version " + update["version"])
+        if "Fedora" in update["name"] :
+            logger.info("Updating release " + update["distribution_release"])
+        else:
+            logger.info("Updating version " + update["version"])
         return update_catalog_entry(connection, update)
     else:
         return write_catalog_entry(connection, update)

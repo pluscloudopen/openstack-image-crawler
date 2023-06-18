@@ -20,6 +20,7 @@ sources:
         extension: img
         checksumname: SHA256SUMS
         algorithm: sha256
+        limit: 5
 
   - name: Ubuntu Minimal
     vendor: "Canonical Ltd."
@@ -102,7 +103,7 @@ sources:
         extension: img.gz
         checksumname: flatcar_production_openstack_image.img.gz.DIGESTS
         algorithm: md5
-        
+
   - name: Fedora
     vendor: "Fedora Project"
     releases:
@@ -115,8 +116,8 @@ sources:
         extension: qcow2
         checksumname: CHECKSUM
         algorithm: sha256
-        limit: 1
-        
+        limit: 3
+
   - name: RockyLinux
     vendor: "Rocky Linux Foundation"
     releases:

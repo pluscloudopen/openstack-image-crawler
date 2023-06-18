@@ -11,7 +11,6 @@ Supported distributions:
 - Fedora Linux
 - Rocky Linux
 
-
 Note: Flatcar Container Linux offers only zipped images, so a direct upload via OpenStack Image Manager/Glance is not supported (yet).
 
 ## Requirements
@@ -72,6 +71,10 @@ optional arguments:
 ```
 
 ### Helper: Historian
+
+**DEPRECATED**
+
+*will become an option for image-crawler (--previous)*
 
 ./historian.py
 

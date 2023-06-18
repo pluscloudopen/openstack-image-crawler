@@ -8,6 +8,10 @@
 - changed logging
 - improved git error handling
 - improved database handling for releases with "all" as introduced with Fedora
+- fixed Flatcar release_date entry
+- added new crawl-back-eval.py as seperate script for evalution
+- crawl-back-eval.py will be integrated into image-crawler.py and historian.py hack will be removed
+- crawl back support for Debian, Ubuntu and Fedora added
 
 ## 2023-06-11
 - refactoring of updater parts - split into single files for each distribution
