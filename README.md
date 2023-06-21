@@ -40,7 +40,7 @@ pip install -r requirements.txt
 or use the little setup.sh script
 
 ```
-git clone git@github.com:costelter/openstack-image-crawler.git
+git clone https://github.com/pluscloudopen/openstack-image-crawler.git
 cd openstack-image-crawler
 ./setup.sh
 ```
