@@ -136,3 +136,6 @@ test/
 image-catalog
 templates/*pske*
 etc/image-sources.yaml.*
+.s3cfg
+templates-*
+*dev.yaml

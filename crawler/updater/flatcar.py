@@ -111,7 +111,7 @@ def flatcar_update_check(release, last_checksum):
             update["checksum"] = current_checksum
             return update
         else:
-            logger.warn("got no metadata")
+            logger.warning("got no metadata")
             return None
 
     return None

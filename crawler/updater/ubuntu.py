@@ -58,11 +58,15 @@ def get_metadata(release, image_filedate):
     filedate = image_filedate.replace("-", "")
     requestURL = release["baseURL"]
 
+    pprint(requestURL)
+
     request = requests.get(requestURL, allow_redirects=True)
     soup = BeautifulSoup(request.text, "html.parser")
 
     for link in soup.find_all("a"):
         data = link.get("href")
+
+        print(f"{data}")
         if data.find(filedate) != -1:
             release_version_path = data
             version = version_from_path(release_version_path)
@@ -177,7 +181,7 @@ def ubuntu_update_check(release, last_checksum):
             update["checksum"] = current_checksum
             return update
         else:
-            logger.warn("got no metadata")
+            logger.warning("got no metadata")
             return None
 
     return None
