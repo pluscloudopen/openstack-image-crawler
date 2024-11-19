@@ -7,12 +7,10 @@ import datetime
 import re
 
 from crawler.web.generic import url_get_last_modified
-from crawler.web.directory import web_get_checksum, web_get_current_image_metadata
+from crawler.web.directory import web_get_checksum
 
 from bs4 import BeautifulSoup
 from loguru import logger
-
-from pprint import pprint
 
 def build_image_url(release, versionpath):
     if not release["baseURL"].endswith("/"):
@@ -57,8 +55,6 @@ def version_from_path(versionpath):
 def get_metadata(release, image_filedate):
     filedate = image_filedate.replace("-", "")
     requestURL = release["baseURL"]
-
-    pprint(requestURL)
 
     request = requests.get(requestURL, allow_redirects=True)
     soup = BeautifulSoup(request.text, "html.parser")

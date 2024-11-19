@@ -7,8 +7,7 @@ from crawler.updater.alma import alma_update_check
 from crawler.updater.flatcar import flatcar_update_check
 from crawler.updater.fedora import fedora_update_check, fedora_crawl_release
 from crawler.updater.rocky import rocky_update_check
-
-# from pprint import pprint
+from crawler.updater.ps_mirror import ps_mirror_update_check
 
 
 def image_crawl_back_service(connection, source):
@@ -86,7 +85,9 @@ def image_update_service(connection, source):
 
         logger.debug("last_checksum:" + last_checksum)
 
-        if "ubuntu" in release["imagename"]:
+        if "plusserver" in release["baseURL"]:
+            catalog_update = ps_mirror_update_check(release, last_checksum)
+        elif "ubuntu" in release["imagename"]:
             catalog_update = ubuntu_update_check(release, last_checksum)
         elif "debian" in release["imagename"]:
             catalog_update = debian_update_check(release, last_checksum)
@@ -102,6 +103,7 @@ def image_update_service(connection, source):
         else:
             logger.error("Unsupported distribution " + source["name"] + " - please check your images-sources.yaml")
             raise SystemExit(1)
+
         if catalog_update:
             logger.info("Update found for " + source["name"] + " " + release["name"])
             logger.info("New release " + catalog_update["version"])
