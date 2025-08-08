@@ -29,5 +29,6 @@
         url: {{ catalog['versions'][release_version]['url'] }}
         checksum: {{ catalog['versions'][release_version]['checksum'] }}
         build_date: {{ catalog['versions'][release_version]['release_date'] }}
+        source: {{ catalog['versions'][release_version]['url'] }}
         image_description: https://wiki.almalinux.org/release-notes/
 {%- endfor %}

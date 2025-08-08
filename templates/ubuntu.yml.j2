@@ -29,6 +29,7 @@
         url: {{ catalog['versions'][release_version]['url'] }}
         checksum: {{ catalog['versions'][release_version]['checksum'] }}
         build_date: {{ catalog['versions'][release_version]['release_date'] }}
+        source: {{ catalog['versions'][release_version]['url'] }}
         {% set base, filename = catalog['versions'][release_version]['url'].rsplit('/', 1) -%}
         image_description: {{ base }}/unpacked/release_notes.txt
 {%- endfor %}
