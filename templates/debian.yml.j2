@@ -1,5 +1,6 @@
 
   - name: {{ catalog['name'] }} {{ catalog['os_version'] }}
+    enable: true
     format: qcow2
     login: debian
     min_disk: 8
@@ -13,7 +14,6 @@
       hw_disk_bus: scsi
       hw_rng_model: virtio
       hw_scsi_model: virtio-scsi
-      hw_qemu_guest_agent: yes
       hw_watchdog_action: reset
       replace_frequency: monthly
       hotfix_hours: 0
@@ -29,6 +29,5 @@
         url: {{ catalog['versions'][release_version]['url'] }}
         checksum: {{ catalog['versions'][release_version]['checksum'] }}
         build_date: {{ catalog['versions'][release_version]['release_date'] }}
-        image_source: {{ catalog['versions'][release_version]['url'] }}
         image_description: https://www.debian.org/releases/{{ catalog['codename'] }}/amd64/release-notes/
 {%- endfor %}
