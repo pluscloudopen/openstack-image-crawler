@@ -136,7 +136,11 @@ def rocky_update_check(release, last_checksum):
     if current_checksum != last_checksum:
         logger.debug("current_checksum " + current_checksum + " differs from last_checksum " + last_checksum)
 
-        image_metadata = get_metadata(release)
+        try:
+            image_metadata = get_metadata(release)
+        except:
+            logger.warning("got no metadata")
+            return None
         if image_metadata is not None:
             logger.debug("got metadata")
             update = {}

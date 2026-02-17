@@ -167,7 +167,11 @@ def ubuntu_update_check(release, last_checksum):
 
         logger.debug("image_filedate: " + image_filedate)
 
-        image_metadata = get_metadata(release, image_filedate)
+        try:
+            image_metadata = get_metadata(release, image_filedate)
+        except:
+            logger.warning("got no metadata")
+            return None
         if image_metadata is not None:
             logger.debug("got metadata")
             update = {}
@@ -177,7 +181,7 @@ def ubuntu_update_check(release, last_checksum):
             update["checksum"] = current_checksum
             return update
         else:
-            logger.warn("got no metadata")
+            logger.warning("got no metadata")
             return None
 
     return None
