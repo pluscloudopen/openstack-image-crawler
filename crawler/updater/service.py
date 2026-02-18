@@ -107,6 +107,7 @@ def image_update_service(connection, source):
             logger.info("New release " + catalog_update["version"])
             # catalog_update anreichern mit _allen_ Daten für die DB
             catalog_update["distribution_name"] = source["name"]
+            # catalog_update["purpose"] = source.get("purpose", "generic")
             if "Fedora" in release["imagename"]:
                 catalog_update["name"] = source["name"] + " " + catalog_update["release_id"]
                 catalog_update["distribution_release"] = catalog_update["release_id"]
