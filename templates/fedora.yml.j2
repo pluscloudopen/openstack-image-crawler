@@ -21,6 +21,7 @@
       provided_until: none
       os_distro: fedora
       os_version: '{{ catalog['versions'][release_version]['distribution_release'] }}'
+      os_purpose: '{{ catalog['purpose'] }}'
     tags: []
     versions:
       - version: '{{ release_version }}'

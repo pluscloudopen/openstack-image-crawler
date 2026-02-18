@@ -21,6 +21,7 @@
       provided_until: none
       os_distro: flatcar
       os_version: '{{ catalog['os_version'] }}'
+      os_purpose: '{{ catalog['purpose'] }}'
     tags: []
     latest_checksum_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['checksumname'] }}
     latest_url: {{ metadata['baseURL'] }}{{ metadata['releasepath'] }}/{{ metadata['imagename'] }}.{{ metadata['extension'] }}
