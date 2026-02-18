@@ -3,6 +3,7 @@ sources:
 
   - name: Ubuntu
     vendor: "Canonical Ltd."
+    purpose: generic
     releases:
       - name: '20.04'
         codename: focal
@@ -24,6 +25,7 @@ sources:
 
   - name: Ubuntu Minimal
     vendor: "Canonical Ltd."
+    purpose: minimal
     releases:
       - name: '20.04'
         codename: focal
@@ -44,6 +46,7 @@ sources:
 
   - name: Debian
     vendor: "Debian Community"
+    purpose: generic
     releases:
       - name: '10'
         codename: buster
@@ -72,6 +75,7 @@ sources:
 
   - name: AlmaLinux
     vendor: "AlmaLinux OS"
+    purpose: generic
     releases:
       - name: '8'
         codename: 'none'
@@ -94,6 +98,7 @@ sources:
 
   - name: Flatcar
     vendor: "Kinvolk"
+    purpose: k8snode
     releases:
       - name: 'stable'
         codename: 'none'
@@ -106,6 +111,7 @@ sources:
 
   - name: Fedora
     vendor: "Fedora Project"
+    purpose: generic
     releases:
       - name: 'all'
         codename: none
@@ -120,6 +126,7 @@ sources:
 
   - name: RockyLinux
     vendor: "Rocky Linux Foundation"
+    purpose: generic
     releases:
       - name: '8'
         codename: 'none'

@@ -112,7 +112,7 @@ def fedora_update_check(release, last_checksum):
     image_filename = get_image_filename(release, images_url)
 
     if image_filename is None:
-        logger.warn("did not find any matching filenames")
+        logger.warning("did not find any matching filenames")
         return None
 
     logger.debug("image_filename: " +  image_filename)
@@ -204,7 +204,7 @@ def fedora_crawl_release(release):
         image_filename = get_image_filename(release, images_url)
 
         if image_filename is None:
-            logger.warn("did not find any matching filenames")
+            logger.warning("did not find any matching filenames")
             return None
 
         logger.debug("image_filename: " +  image_filename)

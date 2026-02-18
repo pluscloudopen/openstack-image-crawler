@@ -26,6 +26,8 @@ def export_image_catalog(
     for source in sources_catalog["sources"]:
         if source["name"] in updated_sources:
             distribution = source["name"]
+            # purpose = source.get("purpose", "generic")
+            purpose = source["purpose"]
             logger.info("Exporting image catalog for " + distribution)
 
             catalog_export = ""
@@ -58,6 +60,7 @@ def export_image_catalog(
                     release_catalog["os_distro"] = distribution.lower()
                     release_catalog["os_version"] = release["name"]
                     release_catalog["codename"] = release["codename"]
+                    release_catalog["purpose"] = purpose
                     logger.debug("Rendering template for " +
                                  release_catalog["name"] + " " +
                                  release_catalog["os_version"])
@@ -112,6 +115,8 @@ def export_image_catalog_all(
 
     for source in sources_catalog["sources"]:
         distribution = source["name"]
+        # purpose = source.get("purpose", "generic")
+        purpose = source["purpose"]
         logger.info("Exporting image catalog for " + distribution)
 
         catalog_export = ""
@@ -138,6 +143,7 @@ def export_image_catalog_all(
                 release_catalog["os_distro"] = distribution.lower()
                 release_catalog["os_version"] = release["name"]
                 release_catalog["codename"] = release["codename"]
+                release_catalog["purpose"] = purpose
                 logger.debug("Rendering template for " +
                              release_catalog["name"] + " " +
                              release_catalog["os_version"])
